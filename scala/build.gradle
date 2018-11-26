@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'application'
+    id 'scala'
+}
+
+group 'kr.bydelta'
+version '2.0.2'
+
+mainClassName = System.getProperty("mainClass")
+
+run{
+    standardInput = System.in
+}
+
+dependencies{
+    implementation "kr.bydelta:koalanlp-kmr:${kmr}"
+    implementation "kr.bydelta:koalanlp-eunjeon:${eunjeon}"
+    implementation "kr.bydelta:koalanlp-kkma:${kkma}:assembly"
+    implementation ("kr.bydelta:koalanlp-okt:${okt}"){
+        exclude group: "org.scala-lang"
+    }
+    implementation "kr.bydelta:koalanlp-rhino:${rhino}:assembly"
+    implementation "kr.bydelta:koalanlp-etri:${etri}"
+    implementation "kr.bydelta:koalanlp-arirang:${arirang}:assembly"
+    implementation "kr.bydelta:koalanlp-daon:${daon}:assembly"
+    implementation "kr.bydelta:koalanlp-hnn:${hnn}:assembly"
+    implementation "kr.bydelta:koalanlp-scala_2.12:${scalaSupport}"
+    implementation "org.jsoup:jsoup:1.10.3"
+    compile 'org.scala-lang:scala-library:2.12.0'
+}
