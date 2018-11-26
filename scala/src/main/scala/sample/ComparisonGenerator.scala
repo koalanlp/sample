@@ -178,11 +178,13 @@ object ComparisonGenerator {
   }
 
   def heading(text: String, depth: Int = 2)(implicit bw: BufferedWriter): Unit = {
+    bw.newLine()
     bw.write("#" * depth + s" $text")
     bw.newLine()
   }
 
   def quote(text: String*)(implicit bw: BufferedWriter): Unit = {
+    bw.newLine()
     bw.write(text.map("> " + _).mkString("\n>\n"))
     bw.newLine()
   }
@@ -193,6 +195,7 @@ object ComparisonGenerator {
   }
 
   def table(headers: Seq[String], values: Seq[Seq[String]])(implicit bw: BufferedWriter): Unit = {
+    bw.newLine()
     bw.write(headers.mkString(" | ") + "\n" +
       headers.map(_ => "---").mkString(" | ") + "\n" +
       values.map(_.mkString(" | ")).mkString("\n"))
