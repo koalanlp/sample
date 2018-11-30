@@ -51,7 +51,7 @@ KoalaNLP의 코드, 사용법, API는 아래에서 보실 수 있습니다.
 각 기능을 실행해보려면 git clone 이후 clone된 디렉터리에서 다음과 같이 입력해보세요. (예: SentenceSplitScala)
 
 ```bash
-./gradlew -DmainClass=sample.SentenceSplitScala :java:run
+./gradlew -DmainClass=sample.SentenceSplitScala :scala:run
 ```
 
 ### Python 3
