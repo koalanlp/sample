@@ -56,12 +56,12 @@ KoalaNLP의 코드, 사용법, API는 아래에서 보실 수 있습니다.
 
 ### Python 3
 
-* 문장 분리 기능 사용 예시 [sentence_split_usage](https://github.com/koalanlp/sample/blob/master/python/src/main/python/sample/sentence_split_usage.scala)
-* 품사분석기 사용 예시 [tagger_usage](https://github.com/koalanlp/sample/blob/master/python/src/main/python/sample/tagger_usage.scala)
-* 의존구문분석 예시 [dep_parser_usage](https://github.com/koalanlp/sample/blob/master/python/src/main/python/sample/dep_parser_usage.scala)
-* 사전 사용 예시 [dictionary_usage](https://github.com/koalanlp/sample/blob/master/python/src/main/python/sample/dictionary_usage.scala)
-* ETRI 분석기 사용 예시 [ETRI_api_usage](https://github.com/koalanlp/sample/blob/master/python/src/main/python/sample/ETRI_api_usage.scala)
-* 확장 기능 사용 예시 [extension_usage](https://github.com/koalanlp/sample/blob/master/python/src/main/python/sample/extension_usage.scala)
+* 문장 분리 기능 사용 예시 [sentence_split_usage](https://github.com/koalanlp/sample/blob/master/python/sample/sentence_split_usage.py)
+* 품사분석기 사용 예시 [tagger_usage](https://github.com/koalanlp/sample/blob/master/python/sample/tagger_usage.py)
+* 의존구문분석 예시 [dep_parser_usage](https://github.com/koalanlp/sample/blob/master/python/sample/dep_parser_usage.py)
+* 사전 사용 예시 [dictionary_usage](https://github.com/koalanlp/sample/blob/master/python/sample/dictionary_usage.py)
+* ETRI 분석기 사용 예시 [ETRI_api_usage](https://github.com/koalanlp/sample/blob/master/python/sample/ETRI_api_usage.py)
+* 확장 기능 사용 예시 [extension_usage](https://github.com/koalanlp/sample/blob/master/python/sample/extension_usage.py)
 
 각 기능을 실행해보려면 (1) pip로 `Cython`과 `koalanlp`를 설치하고, (2) git clone 이후 clone된 디렉터리에서 다음과 같이 입력해보세요. (예: sentence_split_usage)
 
