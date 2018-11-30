@@ -210,7 +210,7 @@ object ComparisonGenerator {
 
   def list(text: String*)(implicit bw: BufferedWriter): Unit = {
     bw.newLine()
-    bw.write(text.map("* " + _).mkString("\n"))
+    bw.write(text.map("\n* " + _).mkString("\n"))
     bw.newLine()
   }
 }

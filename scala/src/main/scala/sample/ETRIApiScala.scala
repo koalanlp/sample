@@ -27,9 +27,9 @@ object ETRIApiScala {
     }
 
     val labeler = new RoleLabeler(API_KEY)
-    //    val recognizer = new EntityRecognizer(API_KEY);
-    //    val parser = new Parser(API_KEY);
-    //    val tagger = new Tagger(API_KEY);
+    //    val recognizer = new EntityRecognizer(API_KEY)
+    //    val parser = new Parser(API_KEY)
+    //    val tagger = new Tagger(API_KEY)
 
     actor(labeler)
   }

@@ -1,5 +1,6 @@
 .idea/
+virtenv/
 **/target/
 **/build/
 **/node_modules/
-**/venv
+**/.jip
