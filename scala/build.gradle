@@ -27,6 +27,7 @@ dependencies{
     implementation "kr.bydelta:koalanlp-daon:${daon}:assembly"
     implementation "kr.bydelta:koalanlp-hnn:${hnn}:assembly"
     implementation "kr.bydelta:koalanlp-scala_2.12:${scalaSupport}"
+    implementation "kr.bydelta:koalanlp-khaiii:${khaiii}"
     implementation "org.jsoup:jsoup:1.10.3"
     compile 'org.scala-lang:scala-library:2.12.0'
 }

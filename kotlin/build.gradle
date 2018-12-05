@@ -26,4 +26,5 @@ dependencies{
     implementation "kr.bydelta:koalanlp-arirang:${arirang}:assembly"
     implementation "kr.bydelta:koalanlp-daon:${daon}:assembly"
     implementation "kr.bydelta:koalanlp-hnn:${hnn}:assembly"
+    implementation "kr.bydelta:koalanlp-khaiii:${khaiii}"
 }

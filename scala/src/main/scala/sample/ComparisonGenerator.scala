@@ -34,14 +34,14 @@ object ComparisonGenerator {
           val articles = doc.select("a.link_txt").iterator()
             .asScala.filter(_.attr("href").startsWith("http://v.media.daum.net/v/"))
             .map(_.attr("href")).toSeq
-          val seq = Random.shuffle(articles).take(3).flatMap {
+          val seq = Random.shuffle(articles).take(30).flatMap {
             href =>
               Try(Jsoup.parse(new URL(href), 10000)) match {
                 case Success(news) =>
                   val paragraphs = news.select(".article_view section p")
                   val seq = paragraphs.iterator.asScala.map(_.text.trim).filter(_.length > 100).toSeq
 
-                  if (seq.nonEmpty) seq
+                  if (seq.nonEmpty) Random.shuffle(seq).take(5)
                   else Seq.empty
                 case _ =>
                   Seq.empty
@@ -53,7 +53,7 @@ object ComparisonGenerator {
         case _ =>
           example
       }
-    ).take(10)
+    ).take(30)
 
     val (kkmaLoading, kkmaSeq) = results[koala.kkma.Tagger]
     val (eunjeonLoading, eunjeonSeq) = results[koala.eunjeon.Tagger]
@@ -64,13 +64,20 @@ object ComparisonGenerator {
     val (twtLoading, twtSeq) = results[koala.okt.Tagger]
     val (daonLoading, daonSeq) = results[koala.daon.Tagger]
     val (etriLoading, etriSeq) = results[koala.etri.Tagger]
+    val (khaiiiLoading, khaiiiSeq) = results[koala.khaiii.Tagger]
 
-    val loadings = Seq(kkmaLoading, twtLoading, eunjeonLoading,
-      kmrLoading, rhinoLoading, arirangLoading, hnnLoading, daonLoading, etriLoading)
-    val resultSeq = Seq(kkmaSeq, twtSeq, eunjeonSeq, kmrSeq, rhinoSeq, arirangSeq, hnnSeq, daonSeq, etriSeq)
-    val names = Seq("KKMA", "Twitter", "Eunjeon", "KOMORAN", "Rhino", "Arirang", "Hannanum", "Daon", "ETRI")
-    val meanProcessing = resultSeq.map {
-      s => s.tail.map(_._1).sum / s.length
+    val names = Seq("ETRI API", "Kakao Khaiii", "은전한닢(Mecab-ko)", "코모란", "꼬꼬마", "아리랑 (루씬)", "한나눔", "Open Korean Text", "Daon", "라이노")
+    val loadings = Seq(etriLoading, khaiiiLoading, eunjeonLoading, kmrLoading, kkmaLoading, arirangLoading, hnnLoading, twtLoading, daonLoading, rhinoLoading)
+    val resultSeq = Seq(etriSeq, khaiiiSeq, eunjeonSeq, kmrSeq, kkmaSeq, arirangSeq, hnnSeq, twtSeq, daonSeq, rhinoSeq)
+
+    val meanErrProcessing = resultSeq.map{
+      s => 
+      val tail = s.tail
+      val nonerr = tail.filter(_._1 < 10000)
+      val mean = nonerr.map(_._1).sum / nonerr.length
+      val std = nonerr.map(t => Math.pow(t._1 - mean, 2)).sum / (nonerr.length - 1)
+      val errN = s.tail.length - nonerr.length
+        (mean, std, errN)
     }
 
     val (timeSequence, taggedParagraphs) = kkmaSeq.indices.map {
@@ -85,28 +92,30 @@ object ComparisonGenerator {
     val procs = Runtime.getRuntime.availableProcessors()
 
     implicit val bw: BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("../comparison.md")))
-    text("실제 사용 성능을 보여드리기 위해서, 카카오 뉴스에서 임의로 뉴스를 선택하고 10개 문단을 표본추출하였습니다.")
-    text(s"실험환경: (Travis CI) **3GB** MaxHeap, **$procs**-core(s), Scala **2.12**")
+    text("실제 사용 성능을 보여드리기 위해서, 카카오 뉴스에서 임의로 뉴스를 선택하고 30개 문단을 표본추출하였습니다.")
+    text(s"실험환경: Ubuntu 16.04, **3GB** MaxHeap, **$procs**-core(s), Scala **2.12**")
     text(s"실험일시: ${new GregorianCalendar().getTime}")
     heading("시간 성능 개관")
     table(
       "." +: names,
-      ("Initializing" +: loadings.map(_ + "s")) +:
-        timeSequence.zipWithIndex.map {
-          case (seq, 0) => s"Sentence #0 + __Lazy Loading__" +: seq.map(_ + "s")
-          case (seq, i) => s"Sentence #$i" +: seq.map(_ + "s")
-        }
+      Seq("초기화" +: loadings.map(_ + "s"),
+        "첫 문장 (사전 불러오기 포함)" +: timeSequence.head.map(t => f"${t}%.3fs"),
+        "이후 문장들" +: meanErrProcessing.map(t => f"${t._1}%.3f±${t._2}%.3fs"),
+        "오류 발생 횟수" +: meanErrProcessing.map(t => s"${t._3}"))
     )
     text(s"가장 __빠르게 초기화된__ 것은 `${names(loadings.zipWithIndex.minBy(_._1)._2)}`이며, " +
       s"가장 느리게 초기화된 패키지는 `${names(loadings.zipWithIndex.maxBy(_._1)._2)}`입니다.")
     text(s"가장 __빠르게 첫 분석을 시작한__ 것은 `${names(lazyLoading.zipWithIndex.minBy(_._1)._2)}`이며, " +
       s"가장 느리게 첫 분석을 시작한 패키지는 `${names(lazyLoading.zipWithIndex.maxBy(_._1)._2)}`입니다.")
-    text(s"첫 문장을 빼면, 평균적으로 __가장 빠르게 분석한__ 것은 `${names(meanProcessing.zipWithIndex.minBy(_._1)._2)}`이며, " +
-      s"가장 느리게 분석한 패키지는 `${names(meanProcessing.zipWithIndex.maxBy(_._1)._2)}`입니다.")
+    text(s"첫 문장을 빼면, 평균적으로 __가장 빠르게 분석한__ 것은 `${names(meanErrProcessing.zipWithIndex.minBy(_._1._1)._2)}`이며, " +
+      s"가장 느리게 분석한 패키지는 `${names(meanErrProcessing.zipWithIndex.maxBy(_._1._1)._2)}`입니다.")
+    if (meanErrProcessing.map(_._3).sum > 0)
+        text(s"현 시점에서 오류가 발생해 KoalaNLP Wrapper의 개선이 필요한 패키지는 `${meanErrProcessing.zipWithIndex.filter(_._1._3 > 0).map(t => names(t._2)).mkString(", ")}` 입니다.")
 
     heading("Tagging 결과")
-    text("이제부터, 각 문장별로 품사분석 결과를 보여드립니다. " +
+    text("이제부터, 임의로 세 문장을 선택, 품사분석 결과를 보여드립니다. " +
       "정답이 없으므로, 바르게 분석했는지의 여부는 여러분께서 판단하셔야 합니다. " +
+
       "다음과 같은 기준으로 평가해보시는 것을 권장합니다.")
     list(
       "띄어쓰기나 어절구분은 정확한가? (바르게 분석했다면, 읽는 데 __어색함이 없어야__ 합니다)",
@@ -116,24 +125,24 @@ object ComparisonGenerator {
         "   * 명사로도 쓰이는 동사는 N(명사)+XSV(용언화 접미사) 형태를 띄기도 합니다."
     )
 
-    testset.zipWithIndex.zip(taggedParagraphs).foreach {
+    Random.shuffle(testset.zipWithIndex.zip(taggedParagraphs)).take(3).foreach {
       case ((original, i), seq) =>
         heading(s"문장 번호 #$i", depth = 3)
         text("원본 문장:")
         quote(original)
 
-        heading("어절 구분", depth = 4)
+        /* heading("어절 구분", depth = 4)
         names.zip(seq).foreach {
           case (pack, res) =>
             heading(pack, depth = 5)
             quote(res.map(_.surfaceString("⎵")): _*)
-        }
+        }*/
 
         heading("품사 분석", depth = 4)
         names.zip(seq).foreach {
           case (pack, res) =>
             heading(pack, depth = 5)
-            codeQuote(res.map(_.singleLineString))
+            codeQuote(res.map(_.map(_.singleLineString).mkString(" ⎵ ")))
         }
     }
 
@@ -141,7 +150,7 @@ object ComparisonGenerator {
   }
 
   def results[T <: CanTag](implicit m: scala.reflect.Manifest[T], samples: Seq[String]): (Double, Seq[(Double, Seq[Sentence])]) =
-    this.synchronized {
+    ComparisonGenerator.synchronized {
       val (loading, tagger) = loadingSandbox[T]
       val resultSeq = samples.map(taggingSandbox(tagger, _))
       (loading, resultSeq)
@@ -168,13 +177,20 @@ object ComparisonGenerator {
   }
 
   def taggingSandbox(tagger: CanTag, text: String): (Double, Seq[Sentence]) = {
-    val start = System.currentTimeMillis()
-    val para = tagger.tag(text)
-    val end = System.currentTimeMillis()
-    val delta = (end - start) / 1000.0
+    try{
+      val start = System.currentTimeMillis()
+      val para = tagger.tag(text)
+      val end = System.currentTimeMillis()
+      val delta = (end - start) / 1000.0
 
-    println(s"\t\tTagging... $delta s [${tagger.getClass.getCanonicalName}]")
-    (delta, para)
+      println(s"\t\tTagging... $delta s [${tagger.getClass.getCanonicalName}]")
+      (delta, para)
+    }catch{
+      case e: Throwable =>
+      println(s"[ERROR] '${text}' for ${tagger.getClass.getCanonicalName}")
+      e.printStackTrace()
+      (10000, Seq.empty)
+    }
   }
 
   def heading(text: String, depth: Int = 2)(implicit bw: BufferedWriter): Unit = {
