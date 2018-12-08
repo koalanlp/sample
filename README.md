@@ -21,7 +21,7 @@ KoalaNLP의 코드, 사용법, API는 아래에서 보실 수 있습니다.
 각 기능을 실행해보려면 git clone 이후 clone된 디렉터리에서 다음과 같이 입력해보세요. (예: SentenceSplitUsageKt)
 
 ```bash
-./gradlew -DmainClass=sample.SentenceSplitUsageKt :kotlin:run
+TERM=dumb ./gradlew -DmainClass=sample.SentenceSplitUsageKt :kotlin:run
 ```
 
 ### Java 8+
@@ -36,7 +36,7 @@ KoalaNLP의 코드, 사용법, API는 아래에서 보실 수 있습니다.
 각 기능을 실행해보려면 git clone 이후 clone된 디렉터리에서 다음과 같이 입력해보세요. (예: SentenceSplitJava)
 
 ```bash
-./gradlew -DmainClass=sample.SentenceSplitJava :java:run
+TERM=dumb ./gradlew -DmainClass=sample.SentenceSplitJava :java:run
 ```
 
 ### Scala 2.11, 2.12
@@ -51,7 +51,7 @@ KoalaNLP의 코드, 사용법, API는 아래에서 보실 수 있습니다.
 각 기능을 실행해보려면 git clone 이후 clone된 디렉터리에서 다음과 같이 입력해보세요. (예: SentenceSplitScala)
 
 ```bash
-./gradlew -DmainClass=sample.SentenceSplitScala :scala:run
+TERM=dumb ./gradlew -DmainClass=sample.SentenceSplitScala :scala:run
 ```
 
 ### Python 3
@@ -69,6 +69,20 @@ KoalaNLP의 코드, 사용법, API는 아래에서 보실 수 있습니다.
 python3 python/sample/sentence_split_usage.py
 ```
 
-### NodeJS 6.4.1+
+### NodeJS 8+
 
-(현재 준비중입니다.)
+* 문장 분리 기능 사용 예시 [sentenceSplitUsage](https://github.com/koalanlp/sample/blob/master/nodejs/sample/sentenceSplitUsage.js)
+* 품사분석기 사용 예시 [taggerUsage](https://github.com/koalanlp/sample/blob/master/nodejs/sample/taggerUsage.js)
+* 의존구문분석 예시 [depParserUsage](https://github.com/koalanlp/sample/blob/master/nodejs/sample/depParserUsage.js)
+* 사전 사용 예시 [dictionaryUsage](https://github.com/koalanlp/sample/blob/master/nodejs/sample/dictionaryUsage.js)
+* ETRI 분석기 사용 예시 [ETRIApiUsage](https://github.com/koalanlp/sample/blob/master/nodejs/sample/ETRIApiUsage.js)
+* 확장 기능 사용 예시 [extensionUsage](https://github.com/koalanlp/sample/blob/master/nodejs/sample/extensionUsage.js)
+
+각 기능을 실행해보려면 git clone 이후 clone된 디렉터리에서 다음과 같이 입력해보세요. (예: sentenceSplitUsage)
+
+```bash
+cd nodejs
+npm install
+node sample/sentenceSplitUsage.js
+```
+

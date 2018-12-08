@@ -1,3 +1,20 @@
 plugins {
-    id "com.moowork.node" version "1.2.0"
+    id "com.github.node-gradle.node" version "1.3.0"
+}
+
+node{
+    version = '10.13.0'
+    npmVersion = '6.4.1'
+    yarnVersion = '1.12.3'
+
+    download = false
+}
+
+task runFile(type: NodeTask) {
+    script = file(System.getProperty("mainFile") ?: "sample/*.js")
+
+    execOverrides {
+        it.ignoreExitValue = true
+        it.standardInput = System.in
+    }
 }
