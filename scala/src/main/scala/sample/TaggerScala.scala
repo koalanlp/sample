@@ -1,11 +1,11 @@
 package sample
 
 import kr.bydelta.koala.data.Sentence
-import kr.bydelta.koala.eunjeon.Tagger
+//import kr.bydelta.koala.eunjeon.Tagger
 // import kr.bydelta.koala.kmr.Tagger
 // import kr.bydelta.koala.etri.Tagger
 // import kr.bydelta.koala.eunjeon.Tagger
-// import kr.bydelta.koala.arirang.Tagger
+ import kr.bydelta.koala.arirang.Tagger
 // import kr.bydelta.koala.daon.Tagger
 // import kr.bydelta.koala.rhino.Tagger
 // import kr.bydelta.koala.okt.Tagger
