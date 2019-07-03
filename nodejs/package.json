@@ -2,6 +2,12 @@
   "name": "koalanlp-node-sample",
   "version": "2.0.0",
   "dependencies": {
-    "koalanlp": "2.0.0"
-  }
+    "koalanlp": "2.0.0",
+    "snyk": "^1.189.0"
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
