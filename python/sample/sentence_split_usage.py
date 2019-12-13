@@ -1,4 +1,4 @@
-from koalanlp.Util import initialize
+from koalanlp.Util import initialize, finalize
 from koalanlp.proc import SentenceSplitter
 from koalanlp import API
 
@@ -17,3 +17,5 @@ while True:
     print("===== Sentence =====")
     for i, sent in enumerate(sentences):
         print("[%s] %s" % (i, sent))
+
+finalize()

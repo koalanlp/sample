@@ -1,4 +1,4 @@
-from koalanlp.Util import initialize
+from koalanlp.Util import initialize, finalize
 from koalanlp.proc import Tagger
 from koalanlp import API
 
@@ -29,3 +29,5 @@ while True:
                 print("%s/%s " % (morph.getSurface(), morph.getTag()), end='')
 
             print()
+
+finalize()

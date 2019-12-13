@@ -5,11 +5,10 @@ plugins {
 }
 
 group 'kr.bydelta'
-version '2.0.0'
-
-mainClassName = System.getProperty("mainClass")
+version '2.1.2'
 
 run{
+    mainClassName = System.getProperty("mainClass")
     standardInput = System.in
 }
 

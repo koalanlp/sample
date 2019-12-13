@@ -6,15 +6,20 @@ plugins {
 }
 
 group 'kr.bydelta'
-version '2.0.2'
-
-mainClassName = System.getProperty("mainClass")
+version '2.1.2'
 
 run{
+    mainClassName = System.getProperty("mainClass")
     standardInput = System.in
 }
 
+java {
+    disableAutoTargetJvm()
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
 dependencies{
+//    implementation "kr.bydelta:koalanlp-core:${core}"
     implementation "kr.bydelta:koalanlp-kmr:${kmr}"
     implementation "kr.bydelta:koalanlp-eunjeon:${eunjeon}"
     implementation "kr.bydelta:koalanlp-kkma:${kkma}:assembly"
@@ -28,6 +33,8 @@ dependencies{
     implementation "kr.bydelta:koalanlp-hnn:${hnn}:assembly"
     implementation "kr.bydelta:koalanlp-scala_2.12:${scalaSupport}"
     implementation "kr.bydelta:koalanlp-khaiii:${khaiii}"
+    implementation "kr.bydelta:koalanlp-utagger:${utagger}"
     implementation "org.jsoup:jsoup:1.10.3"
-    compile 'org.scala-lang:scala-library:2.12.0'
+    implementation 'org.scala-lang:scala-library:2.12.0'
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.60"
 }

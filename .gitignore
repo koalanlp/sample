@@ -3,4 +3,4 @@ virtenv/
 **/target/
 **/build/
 **/node_modules/
-**/.jip
+**/.java

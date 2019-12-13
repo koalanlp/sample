@@ -1,24 +1,24 @@
 
-실제 사용 성능을 보여드리기 위해서, 카카오 뉴스에서 임의로 뉴스를 선택하고 30개 문단을 표본추출하였습니다.
+실제 사용 성능을 보여드리기 위해서, 카카오 뉴스에서 임의로 뉴스를 선택하고 119개 문단을 표본추출하였습니다.
 
-실험환경: Ubuntu 16.04, **3GB** MaxHeap, **8**-core(s), Scala **2.12**
+실험환경: Ubuntu 18.04, **15GB** MaxHeap, **8**-core(s), Scala **2.12.9**
 
-실험일시: Thu Dec 06 00:37:10 KST 2018
+실험일시: Fri Dec 13 15:36:39 KST 2019
 
 ## 시간 성능 개관
 
-. | ETRI API | Kakao Khaiii | 은전한닢(Mecab-ko) | 코모란 | 꼬꼬마 | 아리랑 (루씬) | 한나눔 | Open Korean Text | Daon | 라이노
---- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
-초기화 | 0.0s | 0.001s | 0.0s | 0.001s | 0.03s | 0.003s | 0.001s | 0.0s | 1.064s | 0.0s
-첫 문장 (사전 불러오기 포함) | 2.321s | 0.085s | 2.656s | 2.450s | 2.007s | 0.167s | 0.269s | 1.048s | 0.010s | 0.328s
-이후 문장들 | 0.107±0.001s | 0.005±0.000s | 0.003±0.000s | 0.002±0.000s | 0.049±0.000s | 0.011±0.000s | 0.007±0.000s | 0.016±0.000s | 0.001±0.000s | 0.038±0.000s
-오류 발생 횟수 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+. | ETRI API | Kakao Khaiii | 은전한닢(Mecab-ko) | 코모란 | 꼬꼬마 | 아리랑 (루씬) | 한나눔 | Open Korean Text | Daon | 라이노 | UTagger
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+초기화 | 0.0s | 0.0s | 0.0s | 0.0s | 0.001s | 0.005s | 0.001s | 0.0s | 0.884s | 0.0s | 0.0s
+첫 문장 (사전 불러오기 포함) | 0.917s | 0.092s | 1.886s | 1.054s | 2.869s | 0.336s | 0.671s | 2.267s | 0.012s | 0.680s | 1.507s
+이후 문장들 | 0.381±2.139s | 0.004±0.000s | 0.004±0.000s | 0.002±0.000s | 0.053±0.001s | 0.013±0.000s | 0.009±0.000s | 0.014±0.000s | 0.001±0.000s | 0.042±0.000s | 0.442±0.044s
+오류 발생 횟수 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
 
 가장 __빠르게 초기화된__ 것은 `ETRI API`이며, 가장 느리게 초기화된 패키지는 `Daon`입니다.
 
-가장 __빠르게 첫 분석을 시작한__ 것은 `Kakao Khaiii`이며, 가장 느리게 첫 분석을 시작한 패키지는 `은전한닢(Mecab-ko)`입니다.
+가장 __빠르게 첫 분석을 시작한__ 것은 `Kakao Khaiii`이며, 가장 느리게 첫 분석을 시작한 패키지는 `꼬꼬마`입니다.
 
-첫 문장을 빼면, 평균적으로 __가장 빠르게 분석한__ 것은 `Daon`이며, 가장 느리게 분석한 패키지는 `ETRI API`입니다.
+첫 문장을 빼면, 평균적으로 __가장 빠르게 분석한__ 것은 `Daon`이며, 가장 느리게 분석한 패키지는 `UTagger`입니다.
 
 ## Tagging 결과
 
@@ -33,246 +33,339 @@
 
 * 용언(동사, 형용사)가 바르게 분석되었는가? (바르게 분석했다면, __V으로 시작하는 품사__ 가 붙고, 이후에, 어미(__E로 시작하는 품사__) 가 붙어야 합니다)   * 명사로도 쓰이는 동사는 N(명사)+XSV(용언화 접미사) 형태를 띄기도 합니다.
 
-### 문장 번호 #11
+### 문장 번호 #18
 
 원본 문장:
 
-> 고인은 장애인이었다. 과거 차량 사고를 당해 한쪽 다리를 쓰지 못했다. 의족을 사용할 정도로 큰 사고였지만, 송씨는 포기하지 않고 생계를 이어나갔다. 송씨처럼 인근에서 구두방을 운영하는 조모(61)씨는 “20년 전 부인과 헤어진 뒤 힘들게 살았던 사람”이라며 “살아남기 위해 여러 일을 전전하다가 구두방을 차리게 된 것”이라고 안타까워했다.
+> ◇ 노영희: 거기까지 일단 하고요. 제가 두 번째 질문 하겠습니다. 그런데 사실 4+1이 불법성이 있냐, 없냐 이 논의는 차치하고. 지금 중요한 것은 4+1 내에서도 사실 이야기가 다르다, 이게 합의가 안 됐다. 이 이야기가 나오고 있습니다. 비례대표 50석, 그리고 지역구 의원을 250석으로 하는 식으로 조정하는 큰 틀에서의 합의는 됐는데, 문제는 '캡'(cap)을 씌우는 방식이라는 거죠. 비례대표 의석에 대해서. 그런데 캡을 씌우는 방식에 대해서 민주당하고 정의당 이런 당의 입장이 완전히 다른 것 같아요. 그래서 혹시 제가 지금 이건 홍 의원님께 여쭤보고 싶은 건데. 로텐더홀에 계시는 의원님들께서 밖에서 계속 그렇게 계시면 한국당의 입장을 가서 이야기할 수 있는 기회가 아예 사라질 수도 있는 거니까, 캡 씌우는 문제 관련된 부분도 중요한 것 아니겠습니까. 좀 응할 생각은 없으실까요?
 
 #### 품사 분석
 
 ##### ETRI API
 ```text
-고인/NNG+은/JX ⎵ 장애인/NNG+이/VCP+었/EP+다/EF+./SF
-과거/NNG ⎵ 차량/NNG ⎵ 사고/NNG+를/JKO ⎵ 당하/VV+어/EC ⎵ 한쪽/NNG ⎵ 다리/NNG+를/JKO ⎵ 쓰/VV+지/EC ⎵ 못하/VX+었/EP+다/EF+./SF
-의족/NNG+을/JKO ⎵ 사용하/VV+ㄹ/ETM ⎵ 정도/NNG+로/JKB ⎵ 크/VA+ㄴ/ETM ⎵ 사고/NNG+이/VCP+었/EP+지만/EC+,/SP ⎵ 송/NNP+씨/NNB+는/JX ⎵ 포기하/VV+지/EC ⎵ 않/VX+고/EC ⎵ 생계/NNG+를/JKO ⎵ 잇/VV+어/EC+나가/VX+았/EP+다/EF+./SF
-송/NNP+씨/NNB+처럼/JKB ⎵ 인근/NNG+에서/JKB ⎵ 구두/NNG+방/NNG+을/JKO ⎵ 운영하/VV+는/ETM ⎵ 조모/NNG+(/SS+61/SN+)/SS+씨/NNB+는/JX ⎵ “/SS+20/SN+년/NNB ⎵ 전/NNG ⎵ 부인/NNG+과/JKB ⎵ 헤어지/VV+ㄴ/ETM ⎵ 뒤/NNG ⎵ 힘들/VA+게/EC ⎵ 살/VV+았/EP+던/ETM ⎵ 사람/NNG+”/SS+이/VCP+라며/EC ⎵ “/SS+살아남/VV+기/ETN ⎵ 위하/VV+어/EC ⎵ 여러/MM ⎵ 일/NNG+을/JKO ⎵ 전전하/VV+다가/EC ⎵ 구두/NNG+방/NNG+을/JKO ⎵ 차리/VV+게/EC ⎵ 되/VV+ㄴ/ETM ⎵ 것/NNB+”/SS+이/VCP+라고/EC ⎵ 안타까워하/VV+었/EP+다/EF+./SF
+◇/SW ⎵ 노영희/NNP+:/SP ⎵ 거기/NP+까지/JX ⎵ 일단/MAG ⎵ 하/VV+고/EC+요/JX+./SF
+제/NP+가/JKS ⎵ 두/MM ⎵ 번째/NNB ⎵ 질문/NNG ⎵ 하/VV+겠/EP+습니다/EF+./SF
+그런데/MAJ ⎵ 사실/MAG ⎵ 4/SN++/SW+1/SN+이/JKS ⎵ 불법성/NNG+이/JKS ⎵ 있/VA+냐/EC+,/SP ⎵ 없/VA+냐/EC ⎵ 이/MM ⎵ 논의/NNG+는/JX ⎵ 차치하/VV+고/EF+./SF
+지금/MAG ⎵ 중요하/VA+ㄴ/ETM ⎵ 것/NNB+은/JX ⎵ 4/SN++/SW+1/SN ⎵ 내/NNB+에서/JKB+도/JX ⎵ 사실/MAG ⎵ 이야기/NNG+가/JKS ⎵ 다르/VA+다/EC+,/SP ⎵ 이것/NP+이/JKS ⎵ 합의/NNG+가/JKS ⎵ 안/MAG ⎵ 되/VV+었/EP+다/EF+./SF
+이/MM ⎵ 이야기/NNG+가/JKS ⎵ 나오/VV+고/EC ⎵ 있/VX+습니다/EF+./SF
+비례대표/NNG ⎵ 50/SN+석/NNB+,/SP ⎵ 그리고/MAJ ⎵ 지역구/NNG ⎵ 의원/NNG+을/JKO ⎵ 250/SN+석/NNB+으로/JKB ⎵ 하/VV+는/ETM ⎵ 식/NNB+으로/JKB ⎵ 조정하/VV+는/ETM ⎵ 크/VA+ㄴ/ETM ⎵ 틀/NNG+에서/JKB+의/JKG ⎵ 합의/NNG+는/JX ⎵ 되/VV+었/EP+는데/EC+,/SP ⎵ 문제/NNG+는/JX ⎵ '/SS+캡/NNG+'/SS+(/SS+cap/SL+)/SS+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+이/VCP+라는/ETM ⎵ 것/NNB+이/VCP+죠/EF+./SF
+비례대표/NNG ⎵ 의석/NNG+에/JKB ⎵ 대하/VV+어서/EC+./SF
+그런데/MAJ ⎵ 캡/NNG+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+에/JKB ⎵ 대하/VV+어서/EC ⎵ 민주당/NNP+하/XSV+고/EC ⎵ 정의당/NNP ⎵ 이런/MM ⎵ 당/NNG+의/JKG ⎵ 입장/NNG+이/JKS ⎵ 완전히/MAG ⎵ 다른/MM ⎵ 것/NNB ⎵ 같/VA+아요/EF+./SF
+그래서/MAJ ⎵ 혹시/MAG ⎵ 제/NP+가/JKS ⎵ 지금/MAG ⎵ 이것/NP+ㄴ/JX ⎵ 홍/NNP ⎵ 의원/NNG+님/XSN+께/JKB ⎵ 여쭈/VV+어/EC+보/VX+고/EC ⎵ 싶/VX+은/ETM ⎵ 것/NNB+이/VCP+ㄴ데/EF+./SF
+로텐더홀/NNG+에/JKB ⎵ 계시/VV+는/ETM ⎵ 의원/NNG+님/XSN+들/XSN+께서/JKS ⎵ 밖/NNG+에서/JKB ⎵ 계속/MAG ⎵ 그렇/VA+게/EC ⎵ 계시/VV+면/EC ⎵ 한국/NNP+당/NNG+의/JKG ⎵ 입장/NNG+을/JKO ⎵ 가/VV+아서/EC ⎵ 이야기하/VV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VA+는/ETM ⎵ 기회/NNG+가/JKS ⎵ 아예/MAG ⎵ 사라지/VV+ㄹ/ETM ⎵ 수/NNB+도/JX ⎵ 있/VA+는/ETM ⎵ 것/NNB+이/VCP+니까/EC+,/SP ⎵ 캡/NNG ⎵ 씌우/VV+는/ETM ⎵ 문제/NNG ⎵ 관련되/VV+ㄴ/ETM ⎵ 부분/NNG+도/JX ⎵ 중요하/VA+ㄴ/ETM ⎵ 것/NNB ⎵ 아니/VCN+겠/EP+습니까/EF+./SF
+좀/MAG ⎵ 응하/VV+ㄹ/ETM ⎵ 생각/NNG+은/JX ⎵ 없/VA+으시/EP+ㄹ까/EF+요/JX+?/SF
 ```
 
 
 ##### Kakao Khaiii
 ```text
-고인/NNG+은/JX ⎵ 장애인/NNG+이/VCP+었/EP+다/EF+./SF
-과거/NNG ⎵ 차량/NNG ⎵ 사고/NNG+를/JKO ⎵ 당하/VV+여/EC ⎵ 한쪽/NNG ⎵ 다리/NNG+를/JKO ⎵ 쓰/VV+지/EC ⎵ 못하/VX+였/EP+다/EF+./SF
-의족/NNG+을/JKO ⎵ 사용/NNG+하/XSV+ㄹ/ETM ⎵ 정도/NNG+로/JKB ⎵ 크/VA+ㄴ/ETM ⎵ 사고/NNG+이/VCP+었/EP+지만/EC+,/SP ⎵ 송/NNP+씨/NNB+는/JX ⎵ 포기/NNG+하/XSV+지/EC ⎵ 않/VX+고/EC ⎵ 생계/NNG+를/JKO ⎵ 잇/VV+어/EC+나가/VX+았/EP+다/EF+./SF
-송/NNP+씨/NNB+처럼/JKB ⎵ 인근/NNG+에서/JKB ⎵ 구두방/NNG+을/JKO ⎵ 운영/NNG+하/XSV+는/ETM ⎵ 조모/NNG+(/SS+61/SN+)/SS+씨/NNB+는/JX ⎵ “/SS+20/SN+년/NNB ⎵ 전/NNG ⎵ 부인/NNG+과/JC ⎵ 헤어지/VV+ㄴ/ETM ⎵ 뒤/NNG ⎵ 힘들/VA+게/EC ⎵ 살/VV+았/EP+던/ETM ⎵ 사람/NNG+”/SS+이/VCP+라며/EC ⎵ “/SS+살아남/VV+기/ETN ⎵ 위하/VV+여/EC ⎵ 여러/MM ⎵ 일/NNG+을/JKO ⎵ 전전/NNG+하/XSV+다가/EC ⎵ 구두방/NNG+을/JKO ⎵ 차리/VV+게/EC ⎵ 되/VV+ㄴ/ETM ⎵ 것/NNB+”/SS+이라고/JKQ ⎵ 안타까워하/VV+였/EP+다/EF+./SF
+◇/SW ⎵ 노영희/NNP+:/SP ⎵ 거기/NP+까지/JX ⎵ 일단/MAG ⎵ 하/VV+고요/EF+./SF
+제/NP+가/JKS ⎵ 두/MM ⎵ 번/NNB+째/XSN ⎵ 질문/NNG ⎵ 하/VV+겠/EP+습니다/EF+./SF
+그런데/MAJ ⎵ 사실/MAG ⎵ 4/SN++/SW+1/SN+이/JKS ⎵ 불법/NNG+성/XSN+이/JKS ⎵ 있/VV+냐/EC+,/SP ⎵ 없/VA+냐/EC ⎵ 이/MM ⎵ 논의/NNG+는/JX ⎵ 차치/NNG+하/XSV+고/EC+./SF
+지금/MAG ⎵ 중요/NNG+하/XSA+ㄴ/ETM ⎵ 것/NNB+은/JX ⎵ 4/SN++/SW+1/SN ⎵ 내/NNB+에서/JKB+도/JX ⎵ 사실/MAG ⎵ 이야기/NNG+가/JKS ⎵ 다르/VA+다/EC+,/SP ⎵ 이것/NP+이/JKS ⎵ 합의/NNG+가/JKS ⎵ 안/MAG ⎵ 되/VV+었/EP+다/EF+./SF
+이/MM ⎵ 이야기/NNG+가/JKS ⎵ 나오/VV+고/EC ⎵ 있/VX+습니다/EF+./SF
+비례/NNG+대표/NNG ⎵ 50/SN+석/NNB+,/SP ⎵ 그리고/MAJ ⎵ 지역구/NNG ⎵ 의원/NNG+을/JKO ⎵ 250/SN+석/NNB+으로/JKB ⎵ 하/VV+는/ETM ⎵ 식/NNB+으로/JKB ⎵ 조정/NNG+하/XSV+는/ETM ⎵ 크/VA+ㄴ/ETM ⎵ 틀/NNG+에서/JKB+의/JKG ⎵ 합의/NNG+는/JX ⎵ 되/VV+었/EP+는데/EC+,/SP ⎵ 문제/NNG+는/JX ⎵ '/SS+캡/SL+'/SS+(/SS+cap/SL+)/SS+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+이/VCP+라는/ETM ⎵ 거/NNB+이/VCP+죠/EF+./SF
+비례/NNG+대표/NNG ⎵ 의석/NNG+에/JKB ⎵ 대하/VV+아서/EF+./SF
+그런데/MAJ ⎵ 캡/NNG+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+에/JKB ⎵ 대하/VV+여서/EC ⎵ 민/NNP+주/NNG+당하/XSV+고/EC ⎵ 정/NNP+의/NNG+당/NNP ⎵ 이런/MM ⎵ 당/NNG+의/JKG ⎵ 입장/NNG+이/JKS ⎵ 완전히/MAG ⎵ 다/MM+르/VA+ㄴ/ETM ⎵ 것/NNB ⎵ 같/VA+아요/EF+./SF
+그래서/MAJ ⎵ 혹시/MAG ⎵ 제/NP+가/JKS ⎵ 지금/MAG ⎵ 이/NNP+것/NP+ㄴ/JX ⎵ 홍/NNP ⎵ 의원/NNG+님/XSN+께/JKB ⎵ 여쭈/VV+어/EC+보/VX+고/EC ⎵ 싶/VX+은/ETM ⎵ 것/NNB+이/VCP+ㄴ데/EF+./SF
+로텐더홀/NNP+에/JKB ⎵ 계시/VV+는/ETM ⎵ 의원/NNG+님/XSN+들/XSN+께/JKS+서/EC ⎵ 밖/NNG+에서/JKB ⎵ 계속/MAG ⎵ 그렇/VA+게/EC ⎵ 계시/VV+면/EC ⎵ 한국당/NNP+의/JKG ⎵ 입장/NNG+을/JKO ⎵ 가/VV+아서/EC ⎵ 이야기/NNG+하/XSV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VV+는/ETM ⎵ 기회/NNG+가/JKS ⎵ 아예/MAG ⎵ 사라지/VV+ㄹ/ETM ⎵ 수/NNB+도/JX ⎵ 있/VV+는/ETM ⎵ 거/NNB+이/VCP+니까/EC+,/SP ⎵ 캡/NNG ⎵ 씌우/VV+는/ETM ⎵ 문제/NNG ⎵ 관련/NNG+되/XSV+ㄴ/ETM ⎵ 부분/NNG+도/JX ⎵ 중요/NNG+하/XSA+ㄴ/ETM ⎵ 것/NNB ⎵ 아니/VCN+겠/EP+습니까/EF+./SF
+좀/MAG ⎵ 응하/VV+ㄹ/ETM ⎵ 생각/NNG+은/JX ⎵ 없/VA+으/EP+실까요/EF+?/SF
 ```
 
 
 ##### 은전한닢(Mecab-ko)
 ```text
-고인/NNG+은/JX ⎵ 장애/NNG+인/NNG+이/VCP ⎵ 었/EP+다/EF ⎵ ./SF
-과거/NNG ⎵ 차량/NNG ⎵ 사고/NNG+를/JKO ⎵ 당하/VV+아/EC ⎵ 한/NNG+쪽/NNG ⎵ 다리/NNG+를/JKO ⎵ 쓰/VV+지/EC ⎵ 못하/VX+았/EP+다/EF ⎵ ./SF
-의족/NNG+을/JKO ⎵ 사용/NNG+하/XSV+ᆯ/ETM ⎵ 정도/NNG+로/JKB ⎵ 크/VA+ᆫ/ETM ⎵ 사고/NNG+이/VCP+었/EP+지만/EC ⎵ ,/SP ⎵ 송/NNP ⎵ 씨/NNB+는/JX ⎵ 포기/NNG+하/XSV+지/EC ⎵ 않/VX+고/EC ⎵ 생계/NNG+를/JKO ⎵ 이/VV+어/EC ⎵ 나가/VV+았/EP+다/EF ⎵ ./SF
-송/NNP ⎵ 씨/NNB+처럼/JKB ⎵ 인근/NNG+에서/JKB ⎵ 구두/NNG ⎵ 방/NNG+을/JKO ⎵ 운영/NNG+하/XSV+는/ETM ⎵ 조모/NNG ⎵ (/SS ⎵ 61/SN ⎵ )/SS ⎵ 씨/NNB+는/JX ⎵ “/SS ⎵ 20/SN ⎵ 년/NNM ⎵ 전/NNG ⎵ 부인/NNG+과/NNG ⎵ 헤어지/VV+ᆫ/ETM ⎵ 뒤/NNG ⎵ 힘들/VA+게/EC ⎵ 살/VV+았/EP+던/ETM ⎵ 사람/NNG ⎵ ”/SS ⎵ 이/VCP ⎵ 라며/EC ⎵ “/SS ⎵ 살아남/VV+기/ETN ⎵ 위하/VV+아/EC ⎵ 여러/MM ⎵ 일/NNG+을/JKO ⎵ 전전/NNG+하/XSV+다가/EC ⎵ 구두/NNG ⎵ 방/NNG+을/JKO ⎵ 차리/VV+게/EC ⎵ 되/VV+ᆫ/ETM ⎵ 것/NNB ⎵ ”/SS ⎵ 이/VCP ⎵ 라고/EC ⎵ 안타까워하/VV+았/EP+다/EF ⎵ ./SF
+◇/SW ⎵ 노영희/NNP ⎵ :/SP ⎵ 거기/NP+까지/JX ⎵ 일단/MAG ⎵ 하/VV+고요/EF ⎵ ./SF
+제/NP+가/JKS ⎵ 두/MM ⎵ 번/NNM+째/XSN ⎵ 질문/NNG ⎵ 하/VV+겠/EP+습니다/EF ⎵ ./SF
+그런데/MAJ ⎵ 사실/MAG ⎵ 4/SN ⎵ +/SW ⎵ 1/SN ⎵ 이/NR ⎵ 불법/NNG+성/XSN+이/JKS ⎵ 있/VA+냐/EF ⎵ ,/SP ⎵ 없/VA+냐/EF ⎵ 이/MM ⎵ 논의/NNG+는/JX ⎵ 차치/NNG+하/XSV+고/EC ⎵ ./SF
+지금/MAG ⎵ 중요/NNG+하/XSA+ᆫ/ETM ⎵ 것/NNB+은/JX ⎵ 4/SN ⎵ +/SW ⎵ 1/SN ⎵ 내/NP+에서/JKB+도/JX ⎵ 사실/MAG ⎵ 이야기/NNG+가/JKS ⎵ 다르/VA+다/EF ⎵ ,/SP ⎵ 이것/NP+이/JKS ⎵ 합의/NNG+가/JKS ⎵ 안/MAG ⎵ 되/VV+었/EP+다/EF ⎵ ./SF
+이/MM ⎵ 이야기/NNG+가/JKS ⎵ 나오/VV+고/EC ⎵ 있/VX+습니다/EF ⎵ ./SF
+비례/NNG ⎵ 대표/NNG ⎵ 50/SN ⎵ 석/NNM ⎵ ,/SP ⎵ 그리고/MAJ ⎵ 지역/NNG+구/NNG ⎵ 의원/NNG+을/JKO ⎵ 250/SN ⎵ 석/NNM+으로/JKB ⎵ 하/VV+는/ETM ⎵ 식/NNB+으로/JKB ⎵ 조정/NNG+하/XSV+는/ETM ⎵ 크/VA+ᆫ/ETM ⎵ 틀/NNG+에서/JKB+의/JKG ⎵ 합의/NNG+는/JX ⎵ 되/VV+었/EP+는데/EC ⎵ ,/SP ⎵ 문제/NNG+는/JX ⎵ '/SW ⎵ 캡/NNG ⎵ '/SW ⎵ (/SS ⎵ cap/SL ⎵ )/SS ⎵ 을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+이/VCP ⎵ 라는/ETM ⎵ 거/NNB+이/VCP+죠/EF ⎵ ./SF
+비례/NNG ⎵ 대표/NNG ⎵ 의석/NNG+에/JKB ⎵ 대하/VV+아서/EC ⎵ ./SF
+그런데/MAJ ⎵ 캡/NNG+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+에/JKB ⎵ 대하/VV+아서/EC ⎵ 민주/NNG+당/NNG+하고/JC ⎵ 정의/NNG+당/NNG ⎵ 이런/MM ⎵ 당/NNG+의/JKG ⎵ 입장/NNG+이/JKS ⎵ 완전히/MAG ⎵ 다르/VA+ᆫ/ETM ⎵ 것/NNB ⎵ 같/VA+아요/EF ⎵ ./SF
+그래서/MAJ ⎵ 혹시/MAG ⎵ 제/NP+가/JKS ⎵ 지금/MAG ⎵ 이거/NP+ㄴ/JX ⎵ 홍/NNG ⎵ 의원/NNG+님/XSN+께/JKB ⎵ 여쭈/VV+어/EC ⎵ 보/VX+고/EC ⎵ 싶/VX+은/ETM ⎵ 것/NNB+이/VCP+ᆫ데/EC ⎵ ./SW ⎵ 로/JKB ⎵ 텐더/NNG ⎵ 홀/NNG+에/JKB ⎵ 계시/VV+는/ETM ⎵ 의원/NNG+님/XSN ⎵ 들/XSN+께서/JKS ⎵ 밖/NNG+에서/JKB ⎵ 계속/MAG ⎵ 그렇/VA+게/EC ⎵ 계시/VX+면/EC ⎵ 한국/NNP ⎵ 당/NNG+의/JKG ⎵ 입장/NNG+을/JKO ⎵ 가/VV+서/EC ⎵ 이야기/NNG+하/XSV+ᆯ/ETM ⎵ 수/NNB ⎵ 있/VV+는/ETM ⎵ 기회/NNG+가/JKS ⎵ 아예/MAG ⎵ 사라지/VV+ᆯ/ETM ⎵ 수/NNB+도/JX ⎵ 있/VX+는/ETM ⎵ 거/NNB+이/VCP+니까/EC ⎵ ,/SP ⎵ 캡/MAG ⎵ 씌우/VV+는/ETM ⎵ 문제/NNG ⎵ 관련/NNG+되/XSV+ᆫ/ETM ⎵ 부분/NNG+도/JX ⎵ 중요/NNG+하/XSA+ᆫ/ETM ⎵ 것/NNB ⎵ 아니/VCN+겠/EP+습니까/EF ⎵ ./SF
+좀/MAG ⎵ 응하/VV+ᆯ/ETM ⎵ 생각/NNG+은/JX ⎵ 없/VA+으시/EP+시/EP+ᆯ까/EF+요/JX ⎵ ?/SF
 ```
 
 
 ##### 코모란
 ```text
-고인/NNG+은/JX ⎵ 장애인/NNG+이/VCP+었/EP+다/EF+./SF
-과거/NNG ⎵ 차량/NNG ⎵ 사고/NNG+를/JKO ⎵ 당하/VV+아/EC ⎵ 한쪽/NNG ⎵ 다리/NNG+를/JKO ⎵ 쓰/VV+지/EC ⎵ 못하/VX+았/EP+다/EF+./SF
-의/NNG+족/NNG+을/JKO ⎵ 사용/NNG+하/XSV+ㄹ/ETM ⎵ 정도/NNG+로/JKB ⎵ 크/VA+ㄴ/ETM ⎵ 사고/NNG+이/VCP+었/EP+지만/EC+,/SP ⎵ 송/NNP+씨/NNB+는/JX ⎵ 포기/NNG+하/XSV+지/EC ⎵ 않/VX+고/EC ⎵ 생계/NNG+를/JKO ⎵ 잇/VV+어/EC+나가/VX+았/EP+다/EF+./SF
-송/NNP+씨/NNB+처럼/JKB ⎵ 인근/NNG+에서/JKB ⎵ 구두/NNP+방/NNG+을/JKO ⎵ 운영/NNG+하/XSV+는/ETM ⎵ 조모/NNP+(/SS+61/SN+)/SS+씨/NNB+는/JX ⎵ “/SS+20년/NNP ⎵ 전/MM ⎵ 부인/NNG+과/JC ⎵ 헤어지/VV+ㄴ/ETM ⎵ 뒤/NNG ⎵ 힘들/VA+게/EC ⎵ 살/VV+았/EP+던/ETM ⎵ 사람/NNG+”/SS+이/VCP+라며/EC ⎵ “/SS+살아남기/NNP ⎵ 위하/VV+아/EC ⎵ 여러/MM ⎵ 일/NNG+을/JKO ⎵ 전전/NNG+하/XSV+다가/EC ⎵ 구두/NNP+방/NNG+을/JKO ⎵ 차리/VV+게/EC ⎵ 되/VV+ㄴ/ETM ⎵ 것/NNB+”/SS+이라고/JKQ ⎵ 안타깝/VA+어/EC+하/VX+았/EP+다/EF+./SF
+◇/SW ⎵ 노/NNP+영희/NNP+:/SP ⎵ 거기/NP+까지/JX ⎵ 일단/MAG ⎵ 하/VX+고요/EF+./SF
+제가/NNP ⎵ 두/MM ⎵ 번/NNB+째/XSN ⎵ 질문/NNG ⎵ 하/VV+겠/EP+습니다/EF+./SF
+그런데/MAJ ⎵ 사실/NNG ⎵ 4/SN++/SW+1/SN+이/NNP ⎵ 불법/NNG+성/XSN+이/JKS ⎵ 있/VV+냐/EC+,/SP ⎵ 없/VA+냐/EC ⎵ 이/MM ⎵ 논의/NNG+는/JX ⎵ 차치/NNG+하/XSV+고/EF+./SF
+지금/MAG ⎵ 중요/XR+하/XSA+ㄴ/ETM ⎵ 것/NNB+은/JX ⎵ 4/SN++/SW+1/SN ⎵ 내/NP+에서/JKB+도/JX ⎵ 사실/NNG ⎵ 이야기/NNG+가/JKS ⎵ 다르/VA+다/EC+,/SP ⎵ 이/VV+게/EC ⎵ 합의/NNG+가/JKS ⎵ 안/MAG ⎵ 되/VV+었/EP+다/EF+./SF
+이/MM ⎵ 이야기/NNG+가/JKS ⎵ 나오/VV+고/EC ⎵ 있/VX+습니다/EF+./SF
+비례/NNP+대표/NNP ⎵ 50/SN+석/NNB+,/SP ⎵ 그리고/MAJ ⎵ 지역구/NNG ⎵ 의원/NNG+을/JKO ⎵ 250/SN+석/NNB+으로/JKB ⎵ 하/VV+는/ETM ⎵ 식/NNB+으로/JKB ⎵ 조정/NNG+하/XSV+는/ETM ⎵ 크/VA+ㄴ/ETM ⎵ 틀/NNG+에서/JKB+의/JKG ⎵ 합의/NNG+는/JX ⎵ 되/VV+었/EP+는데/EC+,/SP ⎵ 문제/NNG+는/JX ⎵ '/SS+캡/NNG+'/SS+(/SS+cap/SL+)/SS+을/ETM ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+이/VCP+라는/ETM ⎵ 거/NNB+죠/EF+./SF
+비례/NNP+대표/NNP ⎵ 의석/NNG+에/JKB ⎵ 대하/VV+아서/EF+./SF
+그런데/MAJ ⎵ 캡/NNG+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+에/JKB ⎵ 대하/VV+아서/EC ⎵ 민주당/NNP+하고/JKB ⎵ 정의당/NNP ⎵ 이런/MM ⎵ 당/NNG+의/JKG ⎵ 입장/NNG+이/JKS ⎵ 완전히/MAG ⎵ 다른/MM ⎵ 것/NNB ⎵ 같/VA+아요/EF+./SF
+그래서/MAJ ⎵ 혹시/MAG ⎵ 제가/NNP ⎵ 지금/MAG ⎵ 이건/NNP ⎵ 홍/NNP ⎵ 의원/NNG+님/XSN+께/JKB ⎵ 여쭈/VV+어/EC+보/VX+고/EC ⎵ 싶/VX+은/ETM ⎵ 걸/VV+ㄴ데/EF+./SF
+로/NNG+텐/NNG+더/NNG+홀/NNG+에/JKB ⎵ 계시/VV+는/ETM ⎵ 의원/NNG+님/XSN+들/XSN+께서/JKS ⎵ 밖/NNG+에서/JKB ⎵ 계속/MAG ⎵ 그렇/VA+게/EC ⎵ 계시/VV+면/EC ⎵ 한국/NNP+당의/NNP ⎵ 입장/NNG+을/JKO ⎵ 가/VV+아서/EC ⎵ 이야기/NNG+하/XSV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VV+는/ETM ⎵ 기회/NNG+가/JKS ⎵ 아예/MAG ⎵ 사라지/VV+ㄹ/ETM ⎵ 수/NNB+도/JX ⎵ 있/VV+는/ETM ⎵ 걸/VV+니까/EC+,/SP ⎵ 캡/NNG ⎵ 씌우/VV+는/ETM ⎵ 문제/NNG ⎵ 관련/NNG+되/XSV+ㄴ/ETM ⎵ 부분/NNG+도/JX ⎵ 중요/XR+하/XSA+ㄴ/ETM ⎵ 것/NNB ⎵ 아니/VCN+겠/EP+습니까/EF+./SF
+좀/MAG ⎵ 응하/VV+ㄹ/ETM ⎵ 생각/NNG+은/JX ⎵ 없/VA+으시/EP+ㄹ까요/EF+?/SF
 ```
 
 
 ##### 꼬꼬마
 ```text
-고인/NNG+은/JX ⎵ 장애인/NNG+이/VCP+었/EP+다/EF+./SF
-과거/NNG ⎵ 차량/NNG ⎵ 사고/NNG+를/JKO ⎵ 당해/NNG ⎵ 한쪽/NNG ⎵ 다리/NNG+를/JKO ⎵ 쓰/VV+지/EC ⎵ 못/MAG+하/XSV+었/EP+다/EF+./SF
-의족/NNG+을/JKO ⎵ 사용/NNG+하/XSV+ㄹ/ETM ⎵ 정도/NNG+로/JKB ⎵ 크/VA+ㄴ/ETM ⎵ 사고/NNG+이/VCP+었/EP+지만/EC+,/SP ⎵ 송/NF ⎵ 씨/NNB+는/JX ⎵ 포기/NNG+하/XSV+지/EC ⎵ 않/VX+고/EC ⎵ 생계/NNG+를/JKO ⎵ 잇/VV+어/EC ⎵ 나가/VX+었/EP+다/EF+./SF
-송씨/NF+처럼/JKB ⎵ 인근/NNG+에서/JKB ⎵ 구두/NNG ⎵ 방/NNG+을/JKO ⎵ 운영/NNG+하/XSV+는/ETM ⎵ 조모/NNG ⎵ (/SS+61/NR+)/SS ⎵ 씨/NNB+는/JX ⎵ “/SS+20/NR ⎵ 년/NNB ⎵ 전/NNG ⎵ 부인/NNG+과/JKB ⎵ 헤어지/VV+ㄴ/ETM ⎵ 뒤/NNG ⎵ 힘들/VA+게/EC ⎵ 살/VV+았/EP+더/EP+ㄴ/ETM ⎵ 사람/NNG+”/SS ⎵ 이/VCP+라며/EC ⎵ “/SS ⎵ 살아남/VV+기/ETN ⎵ 위하/VV+어/EC ⎵ 여러/MM ⎵ 일/NNG+을/JKO ⎵ 전전/NNG+하/XSV+다가/EC ⎵ 구두/NNG ⎵ 방/NNG+을/JKO ⎵ 차리/VV+게/EC ⎵ 되/VV+ㄴ/ETM ⎵ 것/NNB+”/SS ⎵ 이/VCP+라고/EC ⎵ 안타까워하/VV+었/EP+다/EF+./SF
+◇/SW ⎵ 노영희/NF+:/SP ⎵ 거기/NP+까지/JX ⎵ 일단/MAG ⎵ 하/VV+고요/EF+./SF
+저/NP+가/JKS ⎵ 두/MM ⎵ 번째/NNB ⎵ 질문/NNG ⎵ 하/VV+겠/EP+습니다/EF+./SF
+그런데/MAJ ⎵ 사실/NNG ⎵ 4/NR++/SW+1/NR ⎵ 이/MM ⎵ 불법/NNG+성/XSN+이/JKS ⎵ 있/VV+냐/EF+,/SP
+없/VA+냐/EF
+이/MM ⎵ 논의/NNG+는/JX ⎵ 차치/NNG+하/XSV+고/EC+./SF ⎵ 지금/MAG ⎵ 중요/NNG+하/XSA+ㄴ/ETM ⎵ 것/NNB+은/JX ⎵ 4/NR++/SW+1/NR ⎵ 내/NNB+에서/JKB+도/JX ⎵ 사실/NNG ⎵ 이야기/NNG+가/JKS ⎵ 다르/VA+다/EC+,/SP ⎵ 이것/NP+이/JKS ⎵ 합의/NNG+가/JKS ⎵ 안/MAG ⎵ 되/VV+었/EP+다/EF+./SF
+이/MM ⎵ 이야기/NNG+가/JKS ⎵ 나오/VV+고/EC ⎵ 있/VX+습니다/EF+./SF
+비례/NNG+대표/NNG ⎵ 50/NR+석/NNM+,/SP ⎵ 그리/MAG ⎵ 이/VCP+고/EC ⎵ 지역구/NNG ⎵ 의원/NNG+을/JKO ⎵ 250/NR+석/NNM+으로/JKB ⎵ 하/VV+는/ETM ⎵ 식/NNB+으로/JKB ⎵ 조정/NNG+하/XSV+는/ETM ⎵ 크/VA+ㄴ/ETM ⎵ 틀/NNG+에서/JKB+의/JKG ⎵ 합의/NNG+는/JX ⎵ 되/VV+었/EP+는데/EC+,/SP ⎵ 문/NNG+제/XSN+는/JX ⎵ '/SS ⎵ 캐/VV+'/SS ⎵ (/SS+cap/SL+)/SS ⎵ 을/NNG ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+이/VCP+라는/ETM ⎵ 것/NNB+이/VCP+죠/EF+./SF
+비례/NNG+대표/NNG ⎵ 의석/NNG+에/JKB ⎵ 대/NNG+하/XSV+어서/EC+./SF ⎵ 그런데/MAJ ⎵ 캡을/NF ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+에/JKB ⎵ 대/NNG+하/XSV+어서/EC ⎵ 민주당/NNG+하/XSV+고/EC ⎵ 정의당/NNG ⎵ 이런/MM ⎵ 당의/NNG ⎵ 입장/NNG+이/JKS ⎵ 완전히/MAG ⎵ 다르/VA+ㄴ/ETM ⎵ 것/NNB ⎵ 같/VA+아요/EF+./SF
+그래서/MAJ ⎵ 혹시/MAG ⎵ 제/NP+가/JKS ⎵ 지금/NNG ⎵ 이/VCP+건/EC ⎵ 홍/NF ⎵ 의원/NNG+님/XSN+께/JKB ⎵ 여쭈/VV+어/EC ⎵ 보/VX+고/EC ⎵ 싶/VX+은/ETM ⎵ 것/NNB+이/VCP+ㄴ데/EC+./SF ⎵ 로텐더홀/NF+에/JKB ⎵ 계시/VV+는/ETM ⎵ 의원/NNG+님/XSN+들/XSN+께서/JKS ⎵ 밖/NNG+에서/JKB ⎵ 계속/MAG ⎵ 그렇/VA+게/EC ⎵ 계시/VX+면/EC ⎵ 한국/NNG+당/XSN+의/JKG ⎵ 입장/NNG+을/JKO ⎵ 가/VV+아서/EC ⎵ 이야기/NNG+하/XSV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VV+는/ETM ⎵ 기회/NNG+가/JKS ⎵ 아예/MAG ⎵ 사라지/VV+ㄹ/ETM ⎵ 수/NNB+도/JX ⎵ 있/VV+는/ETM ⎵ 걸/VV+니까/EC+,/SP ⎵ 캐/VV ⎵ 씌우는/NF ⎵ 문제/NNG ⎵ 관련/NNG+되/XSV+ㄴ/ETM ⎵ 부분/NNG+도/JX ⎵ 중요/NNG+하/XSA+ㄴ/ETM ⎵ 것/NNB ⎵ 아니/VV+겠/EP+습니까/EF+./SF
+좀/MAG ⎵ 응하/VV+ㄹ/ETM ⎵ 생각/NNG+은/JX ⎵ 없/VA+으시/EP+ㄹ까요/EF+?/SF
 ```
 
 
 ##### 아리랑 (루씬)
 ```text
-고인은/NNG ⎵ 장애인/NNG+이/XSV+었/EP+다/EF ⎵ ./SF
-과거/NNG ⎵ 차량/NNG ⎵ 사고/NNG+를/JX ⎵ 당/NNG+하/XSV+어/EF ⎵ 한쪽/NNG ⎵ 다리/NNG+를/JX ⎵ 쓰/VV+지/EF ⎵ 못하/VV+었/EP+다/EF ⎵ ./SF
-의족/NNG+을/JX ⎵ 사용/NNG+하/XSV+ㄹ/EF ⎵ 정도/NNG+로/JX ⎵ 큰/NNG ⎵ 사고/NNG+이/XSV+었/EP+지만/EF ⎵ ,/SP ⎵ 송씨/NNG+는/JX ⎵ 포기/NNG+하/XSV+지/EF ⎵ 않/VV+고/EF ⎵ 생계/NNG+를/JX ⎵ 이어/NNG ⎵ 나가/VV+었/EP+다/EF ⎵ ./SF
-송씨/NNG+처럼/JX ⎵ 인근/NNG+에서/JX ⎵ 구두/NNG ⎵ 방/NNG+을/JX ⎵ 운영/NNG+하/XSV+는/EF ⎵ 조모/NNG ⎵ (/SS ⎵ 61/NNG ⎵ )/SS ⎵ 씨/NNG+는/JX ⎵ “/SS ⎵ 20/NNG ⎵ 년 전/NNG ⎵ 부인/NNG+과/JX ⎵ 헤어지/VV+ㄴ/EF ⎵ 뒤/NNG ⎵ 힘들/VV+게/EF ⎵ 살/VV+았/EP+던/EF ⎵ 사람/NNG ⎵ ”/SS ⎵ 이/NNG+라/JX ⎵ 며/NNG ⎵ “/SS ⎵ 살아남/VV+기/EF ⎵ 위해/NNG ⎵ 여러/NNG ⎵ 일/NNG+을/JX ⎵ 전전/NNG+하/XSV+어다가/EF ⎵ 구두/NNG ⎵ 방/NNG+을/JX ⎵ 차리/VV+게/EF ⎵ 된/NNG ⎵ 것/NNG ⎵ ”/SS ⎵ 이/NNG+라고/JX ⎵ 안타까워/NNG+하/XSV+었/EP+다/EF ⎵ ./NA
+◇/NNG ⎵ 노영희/NNG ⎵ :/SP ⎵ 거기까지/NNG ⎵ 일단/NNG ⎵ 하고요/NNG ⎵ ./SF
+제가/NNG ⎵ 두/NNG ⎵ 번째/NNG ⎵ 질문/NNG ⎵ 하겠습니다/NNG ⎵ ./SF
+그런데/NNG ⎵ 사실/NNG ⎵ 4+1이/NNG ⎵ 불법성이/NNG ⎵ 있냐/NNG ⎵ ,/SP ⎵ 없냐/NNG ⎵ 이/NNG ⎵ 논의는/NNG ⎵ 차치하고/NNG ⎵ ./SF
+지금/NNG ⎵ 중요한/NNG ⎵ 것은/NNG ⎵ 4+1/NNG ⎵ 내에서도/NNG ⎵ 사실/NNG ⎵ 이야기가/NNG ⎵ 다르다/NNG ⎵ ,/SP ⎵ 이게/NNG ⎵ 합의가/NNG ⎵ 안/NNG ⎵ 됐다/NNG ⎵ ./SF
+이/NNG ⎵ 이야기가/NNG ⎵ 나오고/NNG ⎵ 있/NNG ⎵ 습니다/NNG ⎵ ./SF
+비례대표/NNG ⎵ 50석/NNG ⎵ ,/SP ⎵ 그리고/NNG ⎵ 지역구/NNG ⎵ 의원을/NNG ⎵ 250석으로/NNG ⎵ 하/VV+는/EF ⎵ 식/NNG+으로/JX ⎵ 조정/NNG+하/XSV+는/EF ⎵ 큰/NNG ⎵ 틀/NNG+에/JX ⎵ 서/NNG+의/JX ⎵ 합의/NNG+는/JX ⎵ 되/VV+었/EP+는데/EF ⎵ ,/SP ⎵ 문제/NNG+는/JX ⎵ '/SS ⎵ 캡/NNG ⎵ '/SS ⎵ (/SS ⎵ cap/NNG ⎵ )/SS ⎵ 을/NNG ⎵ 씌우/VV+는/EF ⎵ 방식/NNG+이/XSV+라는/EF ⎵ 거죠/NNG ⎵ ./SF
+비례/NNG ⎵ 대표/NNG ⎵ 의석/NNG+에/JX ⎵ 대/NNG ⎵ 해서/NNG ⎵ ./SF
+그런데/MAG ⎵ 캡/NNG+을/JX ⎵ 씌우/VV+는/EF ⎵ 방식/NNG+에/JX ⎵ 대하/VV+어서/EF ⎵ 민주/NNG+당하/XSV+고/EF ⎵ 정의/NNG ⎵ 당/NNG ⎵ 이런/MAG ⎵ 당/NNG+의/JX ⎵ 입장/NNG+이/JX ⎵ 완전히/MAG ⎵ 다른/NNG ⎵ 것/NNG ⎵ 같/VV+아요/EF ⎵ ./SF
+그래서/MAG ⎵ 혹시/MAG ⎵ 제가/NNG ⎵ 지금/NNG ⎵ 이건 홍/NNG ⎵ 의원/NNG ⎵ 님/NNG+께/JX ⎵ 여쭈/VV+어/EC+보/VX+고/EF ⎵ 싶/VV+은/EF ⎵ 거/VV+ㄴ데/EF ⎵ ./SF
+로텐더/NNG ⎵ 홀/NNG+에/JX ⎵ 계시/VV+는/EF ⎵ /NNG+의/JX ⎵ 원님/NNG ⎵ 들/NNG+께서/JX ⎵ 밖/NNG+에서/JX ⎵ 계속/NNG ⎵ 그렇/VV+게/EF ⎵ 계시/VV+면/EF ⎵ 한국/NNG ⎵ 당/NNG+의/JX ⎵ 입장/NNG+을/JX ⎵ 가/VV+어서/EF ⎵ 이야기/NNG+하/XSV+ㄹ/EF ⎵ 수/NNG ⎵ 있/VV+는/EF ⎵ 기회/NNG+가/JX ⎵ 아예/NNG ⎵ 사라지/VV+ㄹ/EF ⎵ 수도/NNG ⎵ 있/VV+는/EF ⎵ 거/VV+니까/EF ⎵ ,/SP ⎵ 캡/NNG ⎵ 씌우/VV+는/EF ⎵ 문제/NNG ⎵ 관련/NNG+되/XSV+ㄴ/EF ⎵ 부분/NNG+도/JX ⎵ 중요/NNG+하/XSV+ㄴ/EF ⎵ 것/NNG ⎵ 아니/VV+겠/EP+습니까/EF ⎵ ./SF
+좀/NNG ⎵ 응하/VV+ㄹ/EF ⎵ 생각/NNG+은/JX ⎵ 없/VV+으시/EP+ㄹ까요/EF ⎵ ?/SF
 ```
 
 
 ##### 한나눔
 ```text
-고인/NNG+은/JX ⎵ 장애인/NNG+이/VCP+었/EP+다/EF ⎵ ./SF
-과거/NNG ⎵ 차량/NNG ⎵ 사고/NNG+를/JKO ⎵ 당하/VV+어/EC ⎵ 하/VV+ㄴ/ETM+쪽/NNB ⎵ 다리/NNG+를/JKO ⎵ 쓰/VV+지/EC ⎵ 못하/VX+었/EP+다/EF ⎵ ./SF
-의족/NNG+을/JKO ⎵ 사용/NNG+하/XSV+ㄹ/ETM ⎵ 정도/NNG+로/JKB ⎵ 크/VA+ㄴ/ETM ⎵ 사고/NNG+이/VCP+었/EP+지만/EC+,/SP ⎵ 송씨/NNG+는/JX ⎵ 포기/NNG+하/XSV+지/EC ⎵ 않/VX+고/EC ⎵ 생계/NNG+를/JKO ⎵ 잇/VV+어/EC+나/VX+아/EC+가/VX+아/EP+다/EF ⎵ ./SF
-송씨처럼/NNG ⎵ 인근/NNG+에서/JKB ⎵ 구두/NNG+방/NNG+을/JKO ⎵ 운영/NNG+하/XSV+는/ETM ⎵ 조모(61)씨/NNG+는/JX ⎵ “20년/NNG ⎵ 전/NNB ⎵ 부인/NNG+과/JC ⎵ 헤어지/VV+ㄴ/ETM ⎵ 뒤/NNG ⎵ 힘들/VV+게/EC ⎵ 살/VV+아/EP+ㄴ/ETM ⎵ 사람”이라/NNG+이/VCP+며/EC ⎵ “살아남기/NNG ⎵ 위하/VV+어/EC ⎵ 여러/MM ⎵ 일/NNG+을/JKO ⎵ 전전/NNG+하/XSV+다가/EC ⎵ 구두/NNG+방/NNG+을/JKO ⎵ 차리/VV+게/EC ⎵ 되/VV+ㄴ/ETM ⎵ 것”/NNG+이/VCP+라/EF+고/JKQ ⎵ 안타깝/VA+어/EC+하/VX+었/EP+다/EF ⎵ ./SF
+◇/NNG ⎵ 노영희:/NNG ⎵ 거기/NP+까지/JX ⎵ 일단/MAG ⎵ 하/VX+고요/EF ⎵ ./SF
+저/NP+가/JKS ⎵ 두/NR ⎵ 번/NNM+째/XSN ⎵ 질문/NNG ⎵ 하/VX+겠/EP+습니다/EF ⎵ ./SF
+그런데/MAJ ⎵ 사/VV+시/EP+ㄹ/ETM ⎵ 4/NR++1/NR+이/JKC ⎵ 불법/NNG+성/NNG+이/JKC ⎵ 있/VX+냐/EF+,/SP ⎵ 없/VA+냐/EF ⎵ 이/MM ⎵ 논의/NNG+는/JX ⎵ 차치/NNG+하고/JC ⎵ ./SF
+지금/MAG ⎵ 중요/NNG+하/XSA+ㄴ/ETM ⎵ 것/NNB+은/JX ⎵ 4/NR++1/NR ⎵ 내/NP+에서/JKB+도/JX ⎵ 사실/MAG ⎵ 이야기/NNG+가/JKC ⎵ 다르/VA+다/EF+,/SP ⎵ 이/NP+이/VCP+게/EC ⎵ 합의가/NNG ⎵ 안/MAG ⎵ 되/VV+었/EP+다/EF ⎵ ./SF
+이/MM ⎵ 이야기/NNG+가/JKC ⎵ 나/VV+아/EC+오/VX+고/EC ⎵ 있/VX+습니다/EF ⎵ ./SF
+비례대표/NNG ⎵ 50/NR+석/NNM+,/SP ⎵ 그리고/MAJ ⎵ 지역구/NNG ⎵ 의원/NNG+을/JKO ⎵ 250/NR+석/NNM+으로/JKB ⎵ 하/VV+는/ETM ⎵ 식/NNB+으로/JKB ⎵ 조정/NNG+하/XSV+는/ETM ⎵ 크/VA+ㄴ/ETM ⎵ 틀/NNG+에서/JKB+의/JKG ⎵ 합/NNG+의/JKG+는/JX ⎵ 되/VV+었/EP+는데/EC+,/SP ⎵ 문제/NNG+는/JX ⎵ '/SS+캡/NNG+'/SS+(/SS+cap/SL+)/SS+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+이/VCP+라/EF+는/ETM ⎵ 거/NNG+이/VCP+죠/EF ⎵ ./SF
+비례대표/NNG ⎵ 의석/NNG+에/JKB ⎵ 대하/VV+어서/EC ⎵ ./SF
+그런데/MAJ ⎵ 캡/NNG+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+에/JKB ⎵ 대하/VV+어서/EC ⎵ 민주/NNG+당/NNG+하고/JC ⎵ 정의/NNG+당/NNG ⎵ 이런/MM ⎵ 당/NNG+의/JKG ⎵ 입장/NNG+이/JKC ⎵ 완전히/MAG ⎵ 다른/MM ⎵ 것/NNB ⎵ 같/VA+아/EF+요/JX ⎵ ./SF
+그래서/MAJ ⎵ 혹시/MAG ⎵ 저/NP+가/JKS ⎵ 지금/MAG ⎵ 이/NP+이/VCP+건/EC ⎵ 홍/NNG ⎵ 의원님/NNG+께/JKB ⎵ 여쭈/VV+어/EC+보/VX+고/EC ⎵ 싶/VX+은/ETM ⎵ 것/NNB+이/VCP+ㄴ데/EC ⎵ ./SF
+로텐더홀/NNG+에/JKB ⎵ 계시/VA+는/ETM ⎵ 의원님/NNG+들/NNG+께서/JKS ⎵ 밖/NNG+에서/JKB ⎵ 계속/MAG ⎵ 그렇/VA+게/EC ⎵ 계시/VA+면/EC ⎵ 한국당/NNG+의/JKG ⎵ 입장/NNG+을/JKO ⎵ 가/VV+서/EC ⎵ 이야기/NNG+하/XSV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VX+는/ETM ⎵ 기회/NNG+가/JKS ⎵ 아예/MAG ⎵ 사라지/VV+ㄹ/ETM ⎵ 수/NNB+도/JX ⎵ 있/VX+는/ETM ⎵ 것/NNB+이/VCP+니까/EC+,/SP ⎵ 캡/NNG ⎵ 씌우/VV+는/ETM ⎵ 문제/NNG ⎵ 관련/NNG+되/XSV+ㄴ/ETM ⎵ 부분/NNG+도/JX ⎵ 중요/NNG+하/XSA+ㄴ/ETM ⎵ 것/NNB ⎵ 아니/VA+겠/EP+습니까/EF ⎵ ./SF
+좀/MAG ⎵ 응하/VV+ㄹ/ETM ⎵ 생각/NNG+은/JX ⎵ 없/VA+으시/EP+ㄹ까/EF+요/JX ⎵ ?/SF
 ```
 
 
 ##### Open Korean Text
 ```text
-고인/NNG+은/JX ⎵ 장애인/NNG+이었다/VV+./SF
-과거/NNG ⎵ 차량/NNG ⎵ 사고/NNG+를/JX ⎵ 당해/VA ⎵ 한쪽/NNG ⎵ 다리/NNG+를/JX ⎵ 쓰지/VV ⎵ 못/XPV+했다/VV+./SF
-의족/NNG+을/JX ⎵ 사용/NNG+할/VV ⎵ 정도/NNG+로/JX ⎵ 큰/VV ⎵ 사고였지만/VV+,/SF ⎵ 송씨/NNG+는/JX ⎵ 포기/NNG+하지/VV ⎵ 않고/VV ⎵ 생계/NNG+를/JX ⎵ 이어/VV+나갔다/VV+./SF
-송씨/NNG+처럼/JX ⎵ 인근/NNG+에서/JX ⎵ 구/MM+두/MM+방/NNG+을/JX ⎵ 운영/NNG+하는/VV ⎵ 조모/NNG+(/SF+61/NR+)/SF+씨/NNG+는/JX ⎵ “/SL+20년/NR ⎵ 전/NNG ⎵ 부인과/NNG ⎵ 헤어진/VV ⎵ 뒤/NNG ⎵ 힘들게/VA ⎵ 살았던/VV ⎵ 사람/NNG+”/SL+이/MM+라며/NNG ⎵ “/SL+살아남기/VV ⎵ 위해/NNG ⎵ 여러/NNG ⎵ 일/NNG+을/JX ⎵ 전전/NNG+하다가/VV ⎵ 구/MM+두/MM+방/NNG+을/JX ⎵ 차리게/VV ⎵ 된/VV ⎵ 것/NNG+”/SL+이라고/JX ⎵ 안타까워/VA+했다/VV+./SF
+◇/SL ⎵ 노/NNG+영희/NNG+:/SF ⎵ 거기/NNG+까지/JX ⎵ 일단/NNG ⎵ 하고요/VV+./SF
+제/NNG+가/JX ⎵ 두/NNG ⎵ 번째/XSO ⎵ 질문/NNG ⎵ 하겠습니다/VV+./SF
+그런데/JC ⎵ 사실/NNG ⎵ 4/NR++/SF+1/NR+이/NNG ⎵ 불법/NNG+성/XSO+이/JX ⎵ 있냐/VA+,/SF ⎵ 없냐/VA ⎵ 이/NNG ⎵ 논의/NNG+는/JX ⎵ 차치하고/VV+./SF
+지금/NNG ⎵ 중요한/VA ⎵ 것/NNG+은/JX ⎵ 4/NR++/SF+1/NR ⎵ 내/NNG+에서도/JX ⎵ 사실/NNG ⎵ 이야기/NNG+가/JX ⎵ 다르다/VA+,/SF ⎵ 이/NNG+게/JX ⎵ 합의/NNG+가/JX ⎵ 안/NNG ⎵ 됐다/VV+./SF
+이/NNG ⎵ 이야기/NNG+가/JX ⎵ 나오고/VV ⎵ 있습니다/VA+./SF
+비례대표/NNG ⎵ 50/NR+석/NNG+,/SF ⎵ 그리고/JC ⎵ 지역구/NNG ⎵ 의원/NNG+을/JX ⎵ 250/NR+석/NNG+으로/JX ⎵ 하는/VV ⎵ 식/NNG+으로/JX ⎵ 조정/NNG+하는/VV ⎵ 큰/VV ⎵ 틀/NNG+에서의/JX ⎵ 합의/NNG+는/JX ⎵ 됐는데/VV+,/SF ⎵ 문제/NNG+는/JX ⎵ '/SF+캡/NNG+'(/SF+cap/SL+)/SF+을/JX ⎵ 씌우는/VV ⎵ 방식/NNG+이라는/JX ⎵ 거/NNG+죠/JX+./SF
+비례대표/NNG ⎵ 의석/NNG+에/JX ⎵ 대해/NNG+서/JX+./SF
+그런데/JC ⎵ 캡/NNG+을/JX ⎵ 씌우는/VV ⎵ 방식/NNG+에/JX ⎵ 대해/NNG+서/JX ⎵ 민주당/NNG+하고/JX ⎵ 정의당/NNG ⎵ 이런/VA ⎵ 당/NNG+의/JX ⎵ 입장/NNG+이/JX ⎵ 완전히/VA ⎵ 다른/NNG ⎵ 것/NNG ⎵ 같아요/VA+./SF
+그래서/MAG ⎵ 혹시/NNG ⎵ 제/NNG+가/JX ⎵ 지금/NNG ⎵ 이/MM+것/NNG+은/JX ⎵ 홍/NNG ⎵ 의원님/NNG+께/JX ⎵ 여쭤/VV+보고/NNG ⎵ 싶은/VV ⎵ 거/NNG+인데/JX+./SF
+로텐더홀/NNG+에/JX ⎵ 계시는/VA ⎵ 의원님/NNG+들/XSO+께서/JX ⎵ 밖/NNG+에서/JX ⎵ 계속/NNG ⎵ 그렇게/MAG ⎵ 계시/NNG+면/JX ⎵ 한국/NNG+당/XSO+의/JX ⎵ 입장/NNG+을/JX ⎵ 가서/VV ⎵ 이야기/NNG+할/VV ⎵ 수/NNG ⎵ 있는/VA ⎵ 기회/NNG+가/JX ⎵ 아예/NNG ⎵ 사라질/VV ⎵ 수도/NNG ⎵ 있는/VA ⎵ 거/NNG+니까/JX+,/SF ⎵ 캡/NNG ⎵ 씌우는/VV ⎵ 문제/NNG ⎵ 관련/NNG+된/VV ⎵ 부분/NNG+도/JX ⎵ 중요한/VA ⎵ 것/NNG ⎵ 아니겠습니까/VA+./SF
+좀/NNG ⎵ 응/NNG+할/VV ⎵ 생각/NNG+은/JX ⎵ 없으실까/VA+요/NNG+?/SF
 ```
 
 
 ##### Daon
 ```text
-고인/NNG+은/JX ⎵ 장애인/NNG+이/VCP+었/EP+다/EF+./SF
-과거/NNG ⎵ 차량/NNG ⎵ 사고/NNG+를/JKO ⎵ 당하/VV+어/EC ⎵ 한쪽/NNG ⎵ 다리/NNG+를/JKO ⎵ 쓰/VV+지/EC ⎵ 못하/VX+었/EP+다/EF+./SF
-의족/NNG+을/JKO ⎵ 사용/NNG+하/XSV+ㄹ/ETM ⎵ 정도/NNG+로/JKB ⎵ 크/VA+ㄴ/ETM ⎵ 사고/NNG+이/VCP+었/EP+지만/EC+,/SP ⎵ 송/NNP+씨/NNB+는/JX ⎵ 포기/NNG+하/XSV+지/EC ⎵ 않/VX+고/EC ⎵ 생계/NNG+를/JKO ⎵ 잇/VV+어/EC+나가/VX+았/EP+다/EF+./SF
-송/NNP+씨/NNB+처럼/JKB ⎵ 인근/NNG+에서/JKB ⎵ 구두/NNG+방/NNG+을/JKO ⎵ 운영/NNG+하/XSV+는/ETM ⎵ 조모/NNG+(/SP+61/SN+)/SW+씨/NNB+는/JX ⎵ “/SW+20/SN+년/NNB ⎵ 전/NNG ⎵ 부인/NNG+과/JKB ⎵ 헤어지/VV+ㄴ/ETM ⎵ 뒤/NNG ⎵ 힘들/VA+게/EC ⎵ 살/VV+았/EP+던/ETM ⎵ 사람/NNG+”/SW+이/VCP+라며/EC ⎵ “/SW+살아남/VV+기/ETN ⎵ 위하/VV+어/EC ⎵ 여러/MM ⎵ 일/NNG+을/JKO ⎵ 전전/NNG+하/XSV+다가/EC ⎵ 구두/NNG+방/NNG+을/JKO ⎵ 차리/VV+게/EC ⎵ 되/VV+ㄴ/ETM ⎵ 것/NNB+”/SW+이/VCP+라고/EC ⎵ 안타까워하/VV+었/EP+다/EF+./SF
+◇/SP ⎵ 노영희/NNP+:/SP ⎵ 거기/NP+까지/JX ⎵ 일단/MAG ⎵ 하/VV+고요/EF+./SF
+제/NP+가/JKS ⎵ 두/MM ⎵ 번째/NNB ⎵ 질문/NNG ⎵ 하/VV+겠/EP+습니다/EF+./SF
+그런데/MAJ ⎵ 사실/NNG ⎵ 4/SN++/SW+1/SN+이/JKS ⎵ 불법/NNG+성/XSN+이/JKS ⎵ 있/VA+냐/EC+,/SP ⎵ 없/VA+냐/EC ⎵ 이/MM ⎵ 논의/NNG+는/JX ⎵ 차치/NNG+하/XSV+고/EC+./SF
+지금/NNG ⎵ 중요/NNG+하/XSA+ㄴ/ETM ⎵ 것/NNB+은/JX ⎵ 4/SN++/SW+1/SN ⎵ 내/NNB+에서/JKB+도/JX ⎵ 사실/NNG ⎵ 이야기/NNG+가/JKS ⎵ 다르/VA+다/EF+,/SP ⎵ 이것/NP+이/JKS ⎵ 합의/NNG+가/JKS ⎵ 안/MAG ⎵ 되/VV+었/EP+다/EC ⎵ 이/MM ⎵ 이야기/NNG+가/JKS ⎵ 나오/VV+고/EC ⎵ 있/VX+습니다/EF+./SF
+비례대표/NNG ⎵ 50/SN+석/NNB+,/SP ⎵ 그리고/MAJ ⎵ 지역구/NNG ⎵ 의원/NNG+을/JKO ⎵ 250/SN+석/NNB+으로/JKB ⎵ 하/VV+는/ETM ⎵ 식/NNB+으로/JKB ⎵ 조정/NNG+하/XSV+는/ETM ⎵ 크/VA+ㄴ/ETM ⎵ 틀/NNG+에서/JKB+의/JKG ⎵ 합의/NNG+는/JX ⎵ 되/VV+었/EP+는데/EC+,/SP ⎵ 문제/NNG+는/JX ⎵ '/SP+캡/NNG+'/SP+(/SP+cap/SL+)/SP+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+이/VCP+라는/ETM ⎵ 거/NNB+이/VCP+죠/EF+./SF
+비례대표/NNG ⎵ 의석/NNG+에/JKB ⎵ 대하/VV+어서/EC+./SF
+그런데/MAJ ⎵ 캡/NNG+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+에/JKB ⎵ 대하/VV+어서/EC ⎵ 민주당/NNP+하/XSV+고/EC ⎵ 정의당/NNP ⎵ 이런/MM ⎵ 당/NNG+의/JKG ⎵ 입장/NNG+이/JKS ⎵ 완전/NNG+히/EC ⎵ 다른/MM ⎵ 것/NNB ⎵ 같/VA+아요/EF+./SF
+그래서/MAJ ⎵ 혹시/MAG ⎵ 제/NP+가/JKS ⎵ 지금/MAG ⎵ 이것/NP+ㄴ/JX ⎵ 홍/NNP ⎵ 의원/NNG+님/XSN+께/JKB ⎵ 여쭈/VV+어/EC+보/VX+고/EC ⎵ 싶/VX+은/ETM ⎵ 것/NNB+이/VCP+ㄴ데/EF+./SF
+로/NNG+텐더/NNG+홀/NNG+에/JKB ⎵ 계시/VV+는/ETM ⎵ 의원/NNG+님/XSN+들/XSN+께서/JKS ⎵ 밖/NNG+에서/JKB ⎵ 계속/MAG ⎵ 그렇/VA+게/EC ⎵ 계시/VV+면/EC ⎵ 한국/NNP+당/XSN+의/JKG ⎵ 입장/NNG+을/JKO ⎵ 가/VV+아서/EC ⎵ 이야기/NNG+하/XSV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VA+는/ETM ⎵ 기회/NNG+가/JKS ⎵ 아예/MAG ⎵ 사라지/VV+ㄹ/ETM ⎵ 수/NNB+도/JX ⎵ 있/VA+는/ETM ⎵ 거/NNB+이/VCP+니까/EC+,/SP ⎵ 캡/NNG ⎵ 씌우/VV+는/ETM ⎵ 문제/NNG ⎵ 관련/NNG+되/XSV+ㄴ/ETM ⎵ 부분/NNG+도/JX ⎵ 중요/NNG+하/XSA+ㄴ/ETM ⎵ 것/NNB ⎵ 아니/VCN+겠/EP+습니까/EF+./SF
+좀/MAG ⎵ 응하/VV+ㄹ/ETM ⎵ 생각/NNG+은/JX ⎵ 없/VA+으시/EP+ㄹ까요/EF+?/SF
 ```
 
 
 ##### 라이노
 ```text
-고인/NNG+은/JX ⎵ 장애인/NNG+이/VCP+었/EP+다/EF ⎵ ./SF
-과거/NNG ⎵ 차량/NNG ⎵ 사고/NNG+를/JKO ⎵ 당해/NNG ⎵ 한쪽/NNG ⎵ 다리/NNG+를/JKO ⎵ 쓰/VV+지/EC ⎵ 못하/VV+았/EP+다/EF ⎵ ./SF
-의족/NNG+을/JKO ⎵ 사용하/VV+ㄹ/ETM ⎵ 정도/NNG+로/JKB ⎵ 크/VA+ㄴ/ETM ⎵ 사고/NNG+이/VCP+었/EP+지만/EC ⎵ ,/SP ⎵ 송/NNP+씨/NNB+는/JX ⎵ 포기하/VV+지/EC ⎵ 않/VX+고/EC ⎵ 생계/NNG+를/JKO ⎵ 잇/VV+어/EC+나가/VX+았/EP+다/EF ⎵ ./SF
-송/NNP+씨/NNB+처럼/JKB ⎵ 인근/NNG+에서/JKB ⎵ 구두방/NNG+을/JKO ⎵ 운영하/VV+는/ETM ⎵ 조/NNP+모/NP ⎵ (/SS ⎵ 61/SN ⎵ )/SS ⎵ 씨/NNB+는/JX ⎵ “/SS ⎵ 20/SN+년/NNB ⎵ 저/NP+는/JX ⎵ 부인/NNG+과/JC ⎵ 헤어지/VV+ㄴ/ETM ⎵ 뒤/NNG ⎵ 힘들/VA+게/EC ⎵ 살/VV+았/EP+던/ETM ⎵ 사람/NNG ⎵ ”/SS ⎵ 이/VCP+라며/EC ⎵ “/SS ⎵ 살아남/VV+기/ETN ⎵ 위하/VV+아/EC ⎵ 여러/MM ⎵ 일/NNG+을/JKO ⎵ 전전하/VV+다가/EC ⎵ 구두방/NNG+을/JKO ⎵ 차리/VV+게/EC ⎵ 되/VV+ㄴ/ETM ⎵ 것/NNB ⎵ ”/SS ⎵ 이/VCP+라고/EC ⎵ 안타깝/VA+어/EC+하/VX+았/EP+다/EF ⎵ ./SF
+◇/SW ⎵ 노영희/NNP ⎵ :/SP ⎵ 거기/NP+까지/JX ⎵ 일단/MAG ⎵ 하/VV+고요/EF ⎵ ./SF
+제/NP+가/JKS ⎵ 두/MM ⎵ 번/NNB+째/XSN ⎵ 질문/NNG ⎵ 하/VV+겠/EP+습니다/EF ⎵ ./SF
+그런데/MAJ ⎵ 사실/MAG ⎵ 4/SN ⎵ +/SW ⎵ 1/SN+이/JKS ⎵ 불법/NNG+성/XSN+이/JKS ⎵ 있/VX+냐/EF ⎵ ,/SP ⎵ 없/VA+냐/EF ⎵ 이/MM ⎵ 논의/NNG+는/JX ⎵ 차치하/VV+고/EC ⎵ ./SF
+지금/NNG ⎵ 중요하/VV+ㄴ/ETM ⎵ 것/NNB+은/JX ⎵ 4/SN ⎵ +/SW ⎵ 1/SN ⎵ 내/NNG+에서/JKB+도/JX ⎵ 사실/MAG ⎵ 이야기/NNG+가/JKS ⎵ 다르/VA+다/EF ⎵ ,/SP ⎵ 이것/VV+이/JKS ⎵ 합의/NNG+가/JKS ⎵ 안/MAG ⎵ 되/VV+었/EP+다/EF ⎵ ./SF
+이/MM ⎵ 이야기/NNG+가/JKS ⎵ 나오/VV+고/EC ⎵ 있/VX+습니다/EF ⎵ ./SF
+비례/NNG+대표/NNG ⎵ 50/SN+석/NNB ⎵ ,/SP ⎵ 그리고/MAJ ⎵ 지역구/NNG ⎵ 의원/NNG+을/JKO ⎵ 250/SN+석/NNB+으로/JKB ⎵ 하/VV+는/ETM ⎵ 식/NNB+으로/JKB ⎵ 조정하/VV+는/ETM ⎵ 크/VA+ㄴ/ETM ⎵ 틀/NNG+에서/JKB+의/JKG ⎵ 합의/NNG+는/JX ⎵ 되/VV+었/EP+는데/EC ⎵ ,/SP ⎵ 문제/NNG+는/JX ⎵ '/SS ⎵ 캡/NNG ⎵ '/SS ⎵ (/SS ⎵ cap/SL ⎵ )/SS ⎵ 을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+이/VCP+라는/ETM ⎵ 것/NNB+죠/EF ⎵ ./SF
+비례/NNG+대표/NNG ⎵ 의석/NNG+에/JKB ⎵ 대하/VV+아서/EC ⎵ ./SF
+그런데/MAJ ⎵ 캡/NNG+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+에/JKB ⎵ 대하/VV+아서/EC ⎵ 민주당/NNP+하/XSV+고/EC ⎵ 정의당/NNP ⎵ 이런/MM ⎵ 당의/NNG ⎵ 입장/NNG+이/JKS ⎵ 완전히/MAG ⎵ 다른/MM ⎵ 것/NNB ⎵ 같/VA+아요/EF ⎵ ./SF
+그래서/MAJ ⎵ 혹시/MAG ⎵ 제/NP+가/JKS ⎵ 지금/NNG ⎵ 이것/NP+은/JX ⎵ 홍/NNP ⎵ 의원/NNG+님/XSN+께/JKB ⎵ 여쭈/VV+어/EC+보/VX+고/EC ⎵ 싶/VX+은/ETM ⎵ 것/NNB+이/VCP+ㄴ데/EC ⎵ ./SF
+로/NNG+텐/NNG+더/MAG+홀/NNG+에/JKB ⎵ 계시/VV+는/JX ⎵ 의원/NNG+님/XSN+들/XSN+께서/JKS ⎵ 밖/NNG+에서/JKB ⎵ 계속/MAG ⎵ 그렇게/MAG ⎵ 계시/VV+면/EC ⎵ 한국당/NNP+의/JKG ⎵ 입장/NNG+을/JKO ⎵ 가/VV+서/JKB ⎵ 이야기하/VV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VX+는/ETM ⎵ 기회/NNG+가/JKS ⎵ 아예/MAG ⎵ 사라지/VV+ㄹ/ETM ⎵ 수/NNB+도/JX ⎵ 있/VX+는/ETM ⎵ 것/NNB+니까/EC ⎵ ,/SP ⎵ 캡/NNG ⎵ 씌우/VV+는/ETM ⎵ 문제/NNG ⎵ 관련되/VV+ㄴ/ETM ⎵ 부분/NNG+도/JX ⎵ 중요하/VV+ㄴ/ETM ⎵ 것/NNB ⎵ 아니/VCN+겠/EP+습니까/EF ⎵ ./SF
+좀/MAG ⎵ 응하/VV+ㄹ/ETM ⎵ 생각/NNG+은/JX ⎵ 없/VA+으시/EP+ㄹ까요/EF ⎵ ?/SF
 ```
 
 
-### 문장 번호 #5
+##### UTagger
+```text
+◇/SW ⎵ 노영희/NNP+:/SP ⎵ 거기/NP+까지/JX ⎵ 일단/MAG ⎵ 하/VV+고요/EF+./SF
+제/NP+가/JKS ⎵ 두/MM ⎵ 번째/NNB ⎵ 질문/NNG ⎵ 하/VV+겠/EP+습니다/EF+./SF
+그런데/MAJ ⎵ 사실/MAG ⎵ 4/SN++/SW+1/SN+이/JKS ⎵ 불법성/NNG+이/JKS ⎵ 있/VA+냐/EC+,/SP ⎵ 없/VA+냐/EC ⎵ 이/MM ⎵ 논의/NNG+는/JX ⎵ 차치하/VV+고/EF+./SF
+지금/MAG ⎵ 중요하/VA+ㄴ/ETM ⎵ 것/NNB+은/JX ⎵ 4/SN++/SW+1/SN ⎵ 내/NNB+에서/JKB+도/JX ⎵ 사실/MAG ⎵ 이야기/NNG+가/JKS ⎵ 다르/VA+다/EC+,/SP ⎵ 이것/NP+이/JKS ⎵ 합의/NNG+가/JKC ⎵ 안/MAG ⎵ 되/VV+었/EP+다/EF+./SF
+이/MM ⎵ 이야기/NNG+가/JKS ⎵ 나오/VV+고/EC ⎵ 있/VX+습니다/EF+./SF
+비례대표/NNG ⎵ 50/SN+석/NNB+,/SP ⎵ 그리고/MAJ ⎵ 지역구/NNG ⎵ 의원/NNG+을/JKO ⎵ 250/SN+석/NNB+으로/JKB ⎵ 하/VV+는/ETM ⎵ 식/NNB+으로/JKB ⎵ 조정하/VV+는/ETM ⎵ 크/VA+ㄴ/ETM ⎵ 틀/NNG+에서/JKB+의/JKG ⎵ 합의/NNG+는/JX ⎵ 되/VV+었/EP+는데/EC+,/SP ⎵ 문제/NNG+는/JX ⎵ '/SS+캡/NNG+'/SS+(/SS+cap/SL+)/SS+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+이/VCP+라는/ETM ⎵ 것/NNB+이/VCP+죠/EF+./SF
+비례대표/NNG ⎵ 의석/NNG+에/JKB ⎵ 대하/VV+여서/EF+./SF
+그런데/MAJ ⎵ 캡/NNG+을/JKO ⎵ 씌우/VV+는/ETM ⎵ 방식/NNG+에/JKB ⎵ 대하/VV+여서/EC ⎵ 민주당/NNP+하고/JKB ⎵ 정의/NNG+당/NNG ⎵ 이런/MM ⎵ 당/NNG+의/JKG ⎵ 입장/NNG+이/JKS ⎵ 완전히/MAG ⎵ 다르/VA+ㄴ/ETM ⎵ 것/NNB ⎵ 같/VA+아요/EF+./SF
+그래서/MAJ ⎵ 혹시/MAG ⎵ 제/NP+가/JKS ⎵ 지금/MAG ⎵ 이거/NP+ㄴ/JX ⎵ 홍/NNP ⎵ 의원/NNG+님/XSN+께/JKB ⎵ 여쭈/VV+어/EC+보/VX+고/EC ⎵ 싶/VX+은/ETM ⎵ 것/NNB+이/VCP+ㄴ데/EF+./SF
+로텐/NNP+더홀/NNP+에/JKB ⎵ 계시/VV+는/ETM ⎵ 의원/NNG+님/XSN+들/XSN+께서/JKS ⎵ 밖/NNG+에서/JKB ⎵ 계속/MAG ⎵ 그렇/VA+게/EC ⎵ 계시/VX+면/EC ⎵ 한국당/NNP+의/JKG ⎵ 입장/NNG+을/JKO ⎵ 가/VV+아서/EC ⎵ 이야기하/VV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VA+는/ETM ⎵ 기회/NNG+가/JKS ⎵ 아예/MAG ⎵ 사라지/VV+ㄹ/ETM ⎵ 수/NNB+도/JX ⎵ 있/VA+는/ETM ⎵ 것/NNB+이/VCP+니까/EC+,/SP ⎵ 캡/NNG ⎵ 씌우/VV+는/ETM ⎵ 문제/NNG ⎵ 관련/NNG+되/XSV+ㄴ/ETM ⎵ 부분/NNG+도/JX ⎵ 중요하/VA+ㄴ/ETM ⎵ 것/NNB ⎵ 아니/VCN+겠/EP+습니까/EF+./SF
+좀/MAG ⎵ 응하/VV+ㄹ/ETM ⎵ 생각/NNG+은/JX ⎵ 없/VA+으시/EP+ㄹ까/EC+요/JX+?/SF
+```
+
+
+### 문장 번호 #34
 
 원본 문장:
 
-> 또 “현대 과학과 인간은 다른 행성에서 오는 외계생명체의 신호를 쫓는 것에만 너무 치중하는 경향이 있다”면서 “외계인이나 UFO 등을 대하는 태도에 문제가 있으며 특히 외계인에 대한 편협한 시각을 가지고 있다”고 지적했다.
+> 재판부는 "주변 사람들이 낸 탄원서 내용이 진실이기를 바라고 피고인이 재판과정에서 보여준 여러 다짐이 진심이기를 기대한다"며 "생을 다할 때까지 참회하는 것이 맞다. 피고인에게 할 한가지 당부는 여성이 있기에 사람들이 존재할 수 있다는 것이다. 잊지 말고 노력해서 밝은 삶을 준비하라"고 당부했다.
 
 #### 품사 분석
 
 ##### ETRI API
 ```text
-또/MAG ⎵ “/SS+현대/NNG ⎵ 과학/NNG+과/JC ⎵ 인간/NNG+은/JX ⎵ 다른/MM ⎵ 행성/NNG+에서/JKB ⎵ 오/VV+는/ETM ⎵ 외계/NNG+생명체/NNG+의/JKG ⎵ 신호/NNG+를/JKO ⎵ 쫓/VV+는/ETM ⎵ 것/NNB+에/JKB+만/JX ⎵ 너무/MAG ⎵ 치중하/VV+는/ETM ⎵ 경향/NNG+이/JKS ⎵ 있/VA+다/EF+”/SS+면서/EC ⎵ “/SS+외계인/NNG+이나/JC ⎵ UFO/SL ⎵ 등/NNB+을/JKO ⎵ 대하/VV+는/ETM ⎵ 태도/NNG+에/JKB ⎵ 문제/NNG+가/JKS ⎵ 있/VA+으며/EC ⎵ 특히/MAG ⎵ 외계인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 편협하/VA+ㄴ/ETM ⎵ 시각/NNG+을/JKO ⎵ 가지/VV+고/EC ⎵ 있/VX+다/EF+”/SS+고/JKQ ⎵ 지적하/VV+었/EP+다/EF+./SF
+재판부/NNG+는/JX ⎵ "/SS+주변/NNG ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 내/VV+ㄴ/ETM ⎵ 탄원서/NNG ⎵ 내용/NNG+이/JKS ⎵ 진실/NNG+이/VCP+기/ETN+를/JKO ⎵ 바라/VV+고/EC ⎵ 피고인/NNG+이/JKS ⎵ 재판/NNG+과정/NNG+에서/JKB ⎵ 보이/VV+어/EC+주/VX+ㄴ/ETM ⎵ 여러/MM ⎵ 다짐/NNG+이/JKS ⎵ 진심/NNG+이/VCP+기/ETN+를/JKO ⎵ 기대하/VV+ㄴ다/EF+"/SS+며/EC ⎵ "/SS+생/NNG+을/JKO ⎵ 다하/VV+ㄹ/ETM ⎵ 때/NNG+까지/JX ⎵ 참회하/VV+는/ETM ⎵ 것/NNB+이/JKS ⎵ 맞/VV+다/EF+./SF
+피고인/NNG+에게/JKB ⎵ 하/VV+ㄹ/ETM ⎵ 한/MM+가지/NNB ⎵ 당부/NNG+는/JX ⎵ 여성/NNG+이/JKS ⎵ 있/VA+기에/EC ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 존재하/VV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VA+다는/ETM ⎵ 것/NNB+이/VCP+다/EF+./SF
+잊/VV+지/EC ⎵ 말/VX+고/EC ⎵ 노력하/VV+어서/EC ⎵ 밝/VA+은/ETM ⎵ 삶/NNG+을/JKO ⎵ 준비하/VV+라/EF+"/SS+고/JKQ ⎵ 당부하/VV+었/EP+다/EF+./SF
 ```
 
 
 ##### Kakao Khaiii
 ```text
-또/MAG ⎵ “/SS+현/NNP+대/NNG ⎵ 과학/NNG+과/JC ⎵ 인간/NNG+은/JX ⎵ 다른/MM ⎵ 행성/NNG+에서/JKB ⎵ 오/VV+는/ETM ⎵ 외계/NNG+생명체/NNG+의/JKG ⎵ 신호/NNG+를/JKO ⎵ 쫓/VV+는/ETM ⎵ 것/NNB+에/JKB+만/JX ⎵ 너무/MAG ⎵ 치중/NNG+하/XSV+는/ETM ⎵ 경향/NNG+이/JKS ⎵ 있/VV+다/EF+”/SS+면서/EC ⎵ “/SS+외계인/NNG+이나/JC ⎵ UFO/SL ⎵ 등/NNB+을/JKO ⎵ 대하/VV+는/ETM ⎵ 태도/NNG+에/JKB ⎵ 문제/NNG+가/JKS ⎵ 있/VV+으며/EC ⎵ 특히/MAG ⎵ 외계인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 편협/NNG+하/XSA+ㄴ/ETM ⎵ 시각/NNG+을/JKO ⎵ 가지/VV+고/EC ⎵ 있/VX+다/EF+”/SS+고/JKQ ⎵ 지적/NNG+하/XSV+였/EP+다/EF+./SF
+재판부/NNG+는/JX ⎵ "/SS+주변/NNG ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 내/VV+ㄴ/ETM ⎵ 탄원서/NNG ⎵ 내용/NNG+이/JKS ⎵ 진실/NNG+이/VCP+기/ETN+를/JKO ⎵ 바라/VV+고/EC ⎵ 피고인/NNG+이/JKS ⎵ 재판/NNG+과정/NNG+에서/JKB ⎵ 보이/VV+어/EC+주/VX+ㄴ/ETM ⎵ 여러/MM ⎵ 다짐/NNG+이/JKS ⎵ 진심/NNG+이/VCP+기/ETN+를/JKO ⎵ 기대/NNG+하/XSV+ㄴ다/EF+"/SS+며/EC ⎵ "/SS+생/NNG+을/JKO ⎵ 다/MAG+하/VV+ㄹ/ETM ⎵ 때/NNG+까지/JX ⎵ 참회/NNG+하/XSV+는/ETM ⎵ 것/NNB+이/JKS ⎵ 맞/VV+다/EF+./SF ⎵ 피고인/NNG+에게/JKB ⎵ 하/VV+ㄹ/ETM ⎵ 한/MM+가지/NNB ⎵ 당부/NNG+는/JX ⎵ 여성/NNG+이/JKS ⎵ 있/VV+기에/EC ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 존재/NNG+하/XSV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VV+다는/ETM ⎵ 것/NNB+이/VCP+다/EF+./SF ⎵ 잊/VV+지/EC ⎵ 말/VX+고/EC ⎵ 노력/NNG+하/XSV+여서/EC ⎵ 밝/VA+은/ETM ⎵ 삶/NNG+을/JKO ⎵ 준비/NNG+하/XSV+라/EC+"/SS+고/JKQ ⎵ 당부/NNG+하/XSV+였/EP+다/EF+./SF
 ```
 
 
 ##### 은전한닢(Mecab-ko)
 ```text
-또/MAG ⎵ “/SS ⎵ 현대/NNG ⎵ 과학/NNG+과/JC ⎵ 인간/NNG+은/JX ⎵ 다른/MM ⎵ 행성/NNG+에서/JKB ⎵ 오/VV+는/ETM ⎵ 외계/NNG ⎵ 생명/NNG+체/NNG+의/JKG ⎵ 신호/NNG+를/JKO ⎵ 쫓/VV+는/ETM ⎵ 것/NNB+에/JKB+만/JX ⎵ 너무/MAG ⎵ 치중/NNG+하/XSV+는/ETM ⎵ 경향/NNG+이/JKS ⎵ 있/VV+다/EC ⎵ ”/SS ⎵ 면서/EC ⎵ “/SS ⎵ 외계/NNG+인/NNG+이나/JC ⎵ UFO/SL ⎵ 등/NNB+을/JKO ⎵ 대하/VV+는/ETM ⎵ 태도/NNG+에/JKB ⎵ 문제/NNG+가/JKS ⎵ 있/VA+으며/EC ⎵ 특히/MAG ⎵ 외계/NNG+인/NNG+에/JKB ⎵ 대하/VV+ᆫ/ETM ⎵ 편협/NNG+하/XSA+ᆫ/ETM ⎵ 시각/NNG+을/JKO ⎵ 가지/VV+고/EC ⎵ 있/VX+다/EC ⎵ ”/SS ⎵ 고/EC ⎵ 지적/NNG+하/XSV+았/EP+다/EF ⎵ ./SF
+재판/NNG+부/NNG+는/JX ⎵ "/SW ⎵ 주변/NNG ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 내/VV+ᆫ/ETM ⎵ 탄원/NNG+서/NNG ⎵ 내용/NNG+이/JKS ⎵ 진실/NNG+이/VCP ⎵ 기/ETN+를/JKO ⎵ 바라/VV+고/EC ⎵ 피고/NNG+인/NNG+이/JKS ⎵ 재판/NNG ⎵ 과정/NNG+에서/JKB ⎵ 보이/VV+어/EC+주/VX+ᆫ/ETM ⎵ 여러/MM ⎵ 다짐/NNG+이/JKS ⎵ 진심/NNG+이/VCP ⎵ 기/ETN+를/JKO ⎵ 기대/NNG+하/XSV+ᆫ다/EC ⎵ "/SW ⎵ 며/EC ⎵ "/SW ⎵ 생/NNG+을/JKO ⎵ 다/MAG ⎵ 하/VV+ᆯ/ETM ⎵ 때/NNG+까지/JX ⎵ 참회/NNG+하/XSV+는/ETM ⎵ 것/NNB+이/JKS ⎵ 맞/VV+다/EF ⎵ ./SF ⎵ 피고/NNG+인/NNG+에게/JKB ⎵ 하/VV+ᆯ/ETM ⎵ 한/MM ⎵ 가지/NNM ⎵ 당부/NNG+는/JX ⎵ 여성/NNG+이/JKS ⎵ 있/VV+기/ETN+에/JKB ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 존재/NNG+하/XSV+ᆯ/ETM ⎵ 수/NNB ⎵ 있/VV+다는/ETM ⎵ 것/NNB+이/VCP ⎵ 다/EF ⎵ ./SF ⎵ 잊/VV+지/EC ⎵ 말/VX+고/EC ⎵ 노력/NNG+하/XSV+아서/EC ⎵ 밝/VA+은/ETM ⎵ 삶/NNG+을/JKO ⎵ 준비/NNG+하/XSV+라/EC ⎵ "/SW ⎵ 고/JKQ ⎵ 당부/NNG+하/XSV+았/EP+다/EF ⎵ ./SF
 ```
 
 
 ##### 코모란
 ```text
-또/MAJ ⎵ “/SS+현대 과학/NNP+과/JC ⎵ 인간/NNG+은/JX ⎵ 다른/MM ⎵ 행성/NNG+에서/JKB ⎵ 오/VV+는/ETM ⎵ 외계/NNG+생명체/NNG+의/JKG ⎵ 신호/NNG+를/JKO ⎵ 쫓/VV+는/ETM ⎵ 것/NNB+에/JKB+만/JX ⎵ 너무/MAG ⎵ 치중/NNG+하/XSV+는/ETM ⎵ 경향/NNG+이/JKS ⎵ 있다/NNP+”/SS+이/VCP+면서/EC ⎵ “/SS+외계인/NNG+이나/JC ⎵ UFO/SL ⎵ 등/NNB+을/JKO ⎵ 대하/VV+는/ETM ⎵ 태도/NNG+에/JKB ⎵ 문제/NNG+가/JKS ⎵ 있/VV+으며/EC ⎵ 특히/MAG ⎵ 외계인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 편협/NNG+하/XSV+ㄴ/ETM ⎵ 시각/NNG+을/JKO ⎵ 가지/VV+고/EC ⎵ 있다/NNP+”/SS+고/JKQ ⎵ 지적/NNG+하/XSV+았/EP+다/EF+./SF
+재판부/NNG+는/JX ⎵ "/SS+주변/NNG ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 내/VV+ㄴ/ETM ⎵ 탄원서/NNG ⎵ 내용/NNG+이/JKS ⎵ 진실/NNG+이/VCP+기/ETN+를/JKO ⎵ 바라/VV+고/EC ⎵ 피고인/NNP+이/JKS ⎵ 재판/NNG+과정/NNG+에서/JKB ⎵ 보이/VV+어/EC+주/VX+ㄴ/ETM ⎵ 여러/MM ⎵ 다짐/NNG+이/JKS ⎵ 지/VX+ㄴ/ETM+심이기/NNP+를/JKO ⎵ 기대/NNG+하/XSV+ㄴ다/EC+"/SS+이/VCP+며/EC ⎵ "/SS+생/NNG+을/JKO ⎵ 다/MAG+하/XSV+ㄹ/ETM ⎵ 때/NNG+까지/JX ⎵ 참회/NNG+하/XSV+는/ETM ⎵ 것/NNB+이/JKS ⎵ 맞/VV+다/EF+./SF ⎵ 피고인/NNP+에게/JKB ⎵ 하/VV+ㄹ/ETM ⎵ 한가지/NNG ⎵ 당부/NNG+는/JX ⎵ 여성/NNG+이/JKS ⎵ 있/VV+기/ETN+에/JKB ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 존재/NNG+하/XSV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VV+다는/ETM ⎵ 것/NNB+이/VCP+다/EF+./SF ⎵ 잊/VV+지/EC ⎵ 말/VX+고/EC ⎵ 노력/NNG+하/XSV+아서/EC ⎵ 밝/VA+은/ETM ⎵ 삶/NNG+을/JKO ⎵ 준비/NNG+하/XSV+라/EC+"/SS+고/JKQ ⎵ 당부/NNG+하/XSV+았/EP+다/EF+./SF
 ```
 
 
 ##### 꼬꼬마
 ```text
-또/MAG ⎵ “/SS ⎵ 현대/NNG ⎵ 과학/NNG+과/JC ⎵ 인간/NNG+은/JX ⎵ 다른/MM ⎵ 행성/NNG+에서/JKB ⎵ 오/VV+는/ETM ⎵ 외계/NNG ⎵ 생명체/NNG+의/JKG ⎵ 신호/NNG+를/JKO ⎵ 쫓/VV+는/ETM ⎵ 것/NNB+에/JKB+만/JX ⎵ 너무/MAG ⎵ 치중/NNG+하/XSV+는/ETM ⎵ 경향/NNG+이/JKS ⎵ 있/VV+다/EC+”/SS ⎵ 이/VCP+면/EC ⎵ 서/VV+어/EC ⎵ “/SS ⎵ 외계인/NNG+이나/JC ⎵ UFO/SL ⎵ 등/NNB+을/JKO ⎵ 대/NNG+하/XSV+는/ETM ⎵ 태도/NNG+에/JKB ⎵ 문제/NNG+가/JKS ⎵ 있/VV+으며/EC ⎵ 특히/MAG ⎵ 외계/NNG+인/XSN+에/JKB ⎵ 대/NNG+하/XSV+ㄴ/ETM ⎵ 편협/NNG+하/XSV+ㄴ/ETM ⎵ 시각/NNG+을/JKO ⎵ 가지/VV+고/EC ⎵ 있/VX+다/EC ⎵ ”/SS+고/JC ⎵ 지적/NNG+하/XSV+었/EP+다/EF+./SF
+재판부/NNG+는/JX ⎵ "/SS ⎵ 주변/NNG ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 내/VV+ㄴ/ETM ⎵ 탄원서/NNG ⎵ 내용/NNG+이/JKS ⎵ 진실/NNG+이/VCP+기/ETN+를/JKO ⎵ 바라/VV+고/EC ⎵ 피고인/NNG+이/JKS ⎵ 재판/NNG+과정/NNG+에서/JKB ⎵ 보이/VV+어/EC ⎵ 주/VX+ㄴ/ETM ⎵ 여러/MM ⎵ 다짐/NNG+이/JKS ⎵ 진심/NNG+이/VCP+기/ETN+를/JKO ⎵ 기대/NNG+하/XSV+ㄴ다/EC ⎵ "/SS+며/JC ⎵ "/SS ⎵ 생/XPN+을/NNG ⎵ 다/MAG+하/XSV+ㄹ/ETM ⎵ 때/NNG+까지/JX ⎵ 참회/NNG+하/XSV+는/ETM ⎵ 것/NNB+이/JX ⎵ 맞/VV+다/EF+./SF
+피고인/NNG+에게/JKB ⎵ 하/VV+ㄹ/ETM ⎵ 한가지/NNG ⎵ 당부/NNG+는/JX ⎵ 여성/NNG+이/JKS ⎵ 있/VV+기에/EC ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 존재/NNG+하/XSV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VV+다는/ETM ⎵ 것/NNB+이/VCP+다/EF+./SF
+잊/VV+지/EC ⎵ 말/VX+고/EC ⎵ 노력/NNG+하/XSV+어서/EC ⎵ 밝/VA+은/ETM ⎵ 살/VV+ㅁ/ETN+을/JKO ⎵ 준비/NNG+하/XSV+라/EC ⎵ "/SS+고/JC ⎵ 당부/NNG+하/XSV+었/EP+다/EF+./SF
 ```
 
 
 ##### 아리랑 (루씬)
 ```text
-또/NNG ⎵ “/SS ⎵ 현대/NNG ⎵ 과학/NNG+과/JX ⎵ 인간/NNG+은/JX ⎵ 다른/NNG ⎵ 행성/NNG+에서/JX ⎵ 오/VV+는/EF ⎵ 외계생명/NNG ⎵ 체/NNG+의/JX ⎵ 신호/NNG+를/JX ⎵ 쫓/VV+는/EF ⎵ 것/NNG+에만/JX ⎵ 너무/MAG ⎵ 치중/NNG ⎵ 하/VV+는/EF ⎵ 경향/NNG+이/JX ⎵ 있/VV+다/EF ⎵ ”/SS ⎵ 면서/NNG ⎵ “/SS ⎵ 외계/NNG ⎵ 인/NNG+이/XSV+나/EF ⎵ UFO/NNG ⎵ 등/NNG+을/JX ⎵ 대/VV+어/EC+하/VX+는/EF ⎵ 태도/NNG+에/JX ⎵ 문제/NNG+가/JX ⎵ 있/VV+으며/EF ⎵ 특히/MAG ⎵ 외계/NNG ⎵ 인/NNG+에/JX ⎵ 대한/NNG ⎵ 편협/NNG+하/XSV+ㄴ/EF ⎵ 시각/NNG+을/JX ⎵ 가지/VV+고/EF ⎵ 있/VV+다/EF ⎵ ”/SS ⎵ 고/NNG ⎵ 지적/NNG+하/XSV+었/EP+다/EF ⎵ ./NA
+재/NNG ⎵ 판/NNG ⎵ 부/NNG+는/JX ⎵ "/SS ⎵ 주변/NNG ⎵ 사람/NNG ⎵ 들/NNG+이/JX ⎵ 낸/NNG ⎵ 탄원서/NNG ⎵ 내용/NNG+이/JX ⎵ 진실/NNG+이/XSV+기/ETN+를/JX ⎵ 바/VV+라고/EF ⎵ 피고인/NNG+이/JX ⎵ 재판/NNG ⎵ 과정/NNG+에서/JX ⎵ 보여주/VV+ㄴ/EF ⎵ 여러/NNG ⎵ 다지/VV+ㅁ/ETN+이/JX ⎵ 진심/NNG+이/XSV+기/ETN+를/JX ⎵ 기대/NNG+하/XSV+ㄴ다/EF ⎵ "/SS ⎵ 며/NNG ⎵ "/SS ⎵ 생/NNG+을/JX ⎵ 다하/VV+ㄹ/EF ⎵ 때/NNG+까지/JX ⎵ 참회/NNG+하/XSV+는/EF ⎵ 것/NNG+이/JX ⎵ 맞/VV+다/EF ⎵ ./SF ⎵ 피고인/NNG+에게/JX ⎵ 할/NNG ⎵ 한가지/NNG ⎵ 당부/NNG+는/JX ⎵ 여성/NNG+이/JX ⎵ 있/VV+기/ETN+에/JX ⎵ 사람/NNG ⎵ 들/NNG+이/JX ⎵ 존재/NNG+하/XSV+ㄹ/EF ⎵ 수/NNG ⎵ 있/VV+다는/EF ⎵ 것/NNG+이/XSV+다/EF ⎵ ./SF ⎵ 잊/VV+지/EF ⎵ 말/VV+고/EF ⎵ 노력/NNG+하/XSV+어서/EF ⎵ 밝/VV+은/EF ⎵ 삶/VV+을/EF ⎵ 준비/NNG+하/XSV+어라/EF ⎵ "/SS ⎵ 고/NNG ⎵ 당부/NNG+하/XSV+었/EP+다/EF ⎵ ./NA
 ```
 
 
 ##### 한나눔
 ```text
-또/MAJ ⎵ “현대/NNG ⎵ 과학/NNG+과/JC ⎵ 인간/NNG+은/JX ⎵ 다른/MM ⎵ 행성/NNG+에서/JKB ⎵ 오/VX+는/ETM ⎵ 외계생명체/NNG+의/JKG ⎵ 신호/NNG+를/JKO ⎵ 쫓/VV+는/ETM ⎵ 것/NNB+에/JKB+만/JX ⎵ 너무/MAG ⎵ 치중/NNG+하/XSV+는/ETM ⎵ 경향/NNG+이/JKC ⎵ 있다”면서/NNG ⎵ “외계인/NNG+이나/JC ⎵ UFO/SL ⎵ 등/NNM+을/JKO ⎵ 대/VV+어/EC+하/VX+는/ETM ⎵ 태도/NNG+에/JKB ⎵ 문제/NNG+가/JKS ⎵ 있/VX+으며/EC ⎵ 특히/MAG ⎵ 외계인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 편협/NNG+하/XSA+ㄴ/ETM ⎵ 시각/NNG+을/JKO ⎵ 가/VV+아/EC+지/VX+고/EC ⎵ 있다”고/NNG ⎵ 지적/NNG+하/XSV+었/EP+다/EF ⎵ ./SF
+재판부/NNG+는/JX ⎵ "/SS+주변/NNG ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 내/VV+ㄴ/ETM ⎵ 탄원서/NNG ⎵ 내용/NNG+이/JKC ⎵ 진실/NNG+이/VCP+기/ETN+를/JKO ⎵ 바/NNB+이/VCP+라/EF+고/JKQ ⎵ 피고인/NNG+이/JKC ⎵ 재판과정/NNG+에서/JKB ⎵ 보이/VV+어/EC+주/VX+ㄴ/ETM ⎵ 여러/MM ⎵ 다지/VV+ㅁ/ETN+이/JKS ⎵ 진심/NNG+이/VCP+기/ETN+를/JKO ⎵ 기대한다"며/NNG ⎵ "/SS+생/NP+을/JKO ⎵ 다하/VV+ㄹ/ETM ⎵ 때/NNG+까지/JX ⎵ 참회/NNG+하/XSV+는/ETM ⎵ 것/NNB+이/JKC ⎵ 맞/VV+다/EF ⎵ ./SF
+피고인/NNG+에게/JKB ⎵ 하/VV+ㄹ/ETM ⎵ 한/NR+가지/NNM ⎵ 당부/NNG+는/JX ⎵ 여성/NNG+이/JKC ⎵ 있/VX+기/ETN+에/JKB ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 존재/NNG+하/XSV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VX+다/EF+는/ETM ⎵ 것/NNB+이/VCP+다/EF ⎵ ./SF
+잊/VV+지/EC ⎵ 말/VX+고/EC ⎵ 노력/NNG+하/XSV+어서/EC ⎵ 밝/VA+은/ETM ⎵ 삶/NNG+을/JKO ⎵ 준비/NNG+하/XSV+라/EF+"/SS+고/JKQ ⎵ 당부/NNG+하/XSV+었/EP+다/EF ⎵ ./SF
 ```
 
 
 ##### Open Korean Text
 ```text
-또/NNG ⎵ “/SL+현대/NNG ⎵ 과학/NNG+과/JX ⎵ 인간/NNG+은/JX ⎵ 다른/NNG ⎵ 행성/NNG+에서/JX ⎵ 오는/VV ⎵ 외계생명체/NNG+의/JX ⎵ 신호/NNG+를/JX ⎵ 쫓는/VV ⎵ 것/NNG+에만/JX ⎵ 너무/MAG ⎵ 치중/NNG+하는/VV ⎵ 경향/NNG+이/JX ⎵ 있다/VA+”/SL+면서/NNG ⎵ “/SL+외계인/NNG+이나/JX ⎵ UFO/SL ⎵ 등/NNG+을/JX ⎵ 대하/NNG+는/JX ⎵ 태도/NNG+에/JX ⎵ 문제/NNG+가/JX ⎵ 있으며/VA ⎵ 특히/MAG ⎵ 외계인/NNG+에/JX ⎵ 대한/NNG ⎵ 편협/NNG+한/JX ⎵ 시각/NNG+을/JX ⎵ 가지/NNG+고/JX ⎵ 있다/VA+”/SL+고/NNG ⎵ 지적/NNG+했다/VV+./SF
+재판/NNG+부는/VV ⎵ "/SF+주변/NNG ⎵ 사람/NNG+들/XSO+이/JX ⎵ 낸/VV ⎵ 탄원서/NNG ⎵ 내용/NNG+이/JX ⎵ 진실/NNG+이기/NNG+를/JX ⎵ 바라고/VV ⎵ 피고인/NNG+이/JX ⎵ 재판/NNG+과정/NNG+에서/JX ⎵ 보여준/VV ⎵ 여러/NNG ⎵ 다짐/NNG+이/JX ⎵ 진심/NNG+이기/NNG+를/JX ⎵ 기대한다/VA+"/SF+며/NNG ⎵ "/SF+생/NNG+을/JX ⎵ 다/MAG+할/VV ⎵ 때/NNG+까지/JX ⎵ 참회/NNG+하는/VV ⎵ 것/NNG+이/JX ⎵ 맞다/VV+./SF
+피고인/NNG+에게/JX ⎵ 할/VV ⎵ 한가지/NNG ⎵ 당부/NNG+는/JX ⎵ 여성/NNG+이/JX ⎵ 있기에/VA ⎵ 사람/NNG+들/XSO+이/JX ⎵ 존재/NNG+할/VV ⎵ 수/NNG ⎵ 있다는/VA ⎵ 것/NNG+이다/JX+./SF
+잊지/VV ⎵ 말고/JX ⎵ 노력/NNG+해서/VV ⎵ 밝은/VV ⎵ 삶/NNG+을/JX ⎵ 준비/NNG+하라/NNG+"/SF+고/NNG ⎵ 당부/NNG+했다/VV+./SF
 ```
 
 
 ##### Daon
 ```text
-또/MAG ⎵ “/SW+현대/NNG ⎵ 과학/NNG+과/JC ⎵ 인간/NNG+은/JX ⎵ 다른/MM ⎵ 행성/NNG+에서/JKB ⎵ 오/VV+는/ETM ⎵ 외계/NNG+생명체/NNG+의/JKG ⎵ 신호/NNG+를/JKO ⎵ 쫓/VV+는/ETM ⎵ 것/NNB+에/JKB+만/JX ⎵ 너무/MAG ⎵ 치중/NNG+하/XSV+는/ETM ⎵ 경향/NNG+이/JKS ⎵ 있/VA+다/EF+”/SW+면서/EC ⎵ “/SW+외계인/NNG+이나/JC ⎵ UFO/SL ⎵ 등/NNB+을/JKO ⎵ 대하/VV+는/ETM ⎵ 태도/NNG+에/JKB ⎵ 문제/NNG+가/JKS ⎵ 있/VA+으며/EC ⎵ 특히/MAG ⎵ 외계인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 편협/NNG+하/XSA+ㄴ/ETM ⎵ 시각/NNG+을/JKO ⎵ 가지/VV+고/EC ⎵ 있/VX+다/EF+”/SW+고/EC ⎵ 지적/NNG+하/XSV+었/EP+다/EF+./SF
+재판부/NNG+는/JX ⎵ "/SP+주변/NNG ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 내/VV+ㄴ/ETM ⎵ 탄원서/NNG ⎵ 내용/NNG+이/JKS ⎵ 진실/NNG+이/VCP+기/ETN+를/JKO ⎵ 바라/VV+고/EC ⎵ 피고인/NNG+이/JKS ⎵ 재판과정/NNG+에서/JKB ⎵ 보이/VV+어/EC+주/VX+ㄴ/ETM ⎵ 여러/MM ⎵ 다짐/NNG+이/JKS ⎵ 진심/NNG+이/VCP+기/ETN+를/JKO ⎵ 기대/NNG+하/XSV+ㄴ다/EF+"/SP+며/EC ⎵ "/SP+생/NNG+을/JKO ⎵ 다하/VV+ㄹ/ETM ⎵ 때/NNG+까지/JX ⎵ 참회/NNG+하/XSV+는/ETM ⎵ 것/NNB+이/JKS ⎵ 맞/VV+다/EF+./SF ⎵ 피고인/NNG+에게/JKB ⎵ 하/VV+ㄹ/ETM ⎵ 한가지/NNG ⎵ 당부/NNG+는/JX ⎵ 여성/NNG+이/JKS ⎵ 있/VA+기에/EC ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 존재/NNG+하/XSV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VA+다는/ETM ⎵ 것/NNB+이/VCP+다/EF+./SF ⎵ 잊/VV+지/EC ⎵ 말/VX+고/EC ⎵ 노력/NNG+하/XSV+어서/EC ⎵ 밝/VA+은/ETM ⎵ 삶/NNG+을/JKO ⎵ 준비/NNG+하/XSV+라/EF+"/SP+고/EC ⎵ 당부/NNG+하/XSV+었/EP+다/EF+./SF
 ```
 
 
 ##### 라이노
 ```text
-또/MAG ⎵ “/SS ⎵ 현대/NNG ⎵ 과학/NNG+과/NNG ⎵ 인간/NNG+은/JX ⎵ 다른/MM ⎵ 행성/NNG+에서/JKB ⎵ 오/VV+는/ETM ⎵ 외계/NNG+생명체/NNG+의/JKG ⎵ 신호/NNG+를/JKO ⎵ 쫓/VV+는/ETM ⎵ 것/NNB+에/JKB+만/JX ⎵ 너무/MAG ⎵ 치중하/VV+는/ETM ⎵ 경향/NNG+이/JKS ⎵ 있/VX+다/EF ⎵ ”/SS ⎵ 면/NNG+서/JKB ⎵ “/SS ⎵ 외계인/NNG+이나/JC ⎵ UFO/SL ⎵ 등/NNG+을/JKO ⎵ 대하/VV+는/JX ⎵ 태도/NNG+에/JKB ⎵ 문제/NNG+가/JKS ⎵ 있/VX+으며/EC ⎵ 특히/MAG ⎵ 외계인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 편협하/VV+ㄴ/ETM ⎵ 시각/NNG+을/JKO ⎵ 가지/VV+고/EC ⎵ 있/VX+다/EF ⎵ ”/SS ⎵ 고/JKQ ⎵ 지적하/VV+았/EP+다/EF ⎵ ./SF
+재판부/NNG+는/JX ⎵ "/SS ⎵ 주변/NNG ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 내/VV+ㄴ/ETM ⎵ 탄원서/NNG ⎵ 내용/NNG+이/JKS ⎵ 진실/NNG+이/VCP+기/ETN+를/JKO ⎵ 바/NNG+라고/EC ⎵ 피고인/NNG+이/JKS ⎵ 재판/NNG+과정/NNG+에서/JKB ⎵ 보이/VV+어/EC+주/VX+ㄴ/ETM ⎵ 여러/MM ⎵ 다짐/NNG+이/JKS ⎵ 진심/NNG+이/VCP+기/ETN+를/JKO ⎵ 기대/VV+하/VX+ㄴ다/EF ⎵ "/SS ⎵ 며/EC ⎵ "/SS ⎵ 생/NNG+을/JKO ⎵ 다/MAG+하/VV+ㄹ/ETM ⎵ 때/NNG+까지/JX ⎵ 참회하/VV+는/ETM ⎵ 것/NNB+이/JKS ⎵ 맞/VV+다/EF ⎵ ./SF ⎵ 피고인/NNG+에게/JKB ⎵ 하/VV+ㄹ/ETM ⎵ 한/MM+가지/NNB ⎵ 당부/NNG+는/JX ⎵ 여성/NNG+이/JKS ⎵ 있/VX+기/ETN+에/JKB ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 존재하/VV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VX+다는/ETM ⎵ 것/NNB+이다/EF ⎵ ./SF ⎵ 잊/VV+지/EC ⎵ 말/VV+고/EC ⎵ 노력하/VV+아서/EC ⎵ 밝/VV+은/ETM ⎵ 삶/NNG+을/JKO ⎵ 준비하/VV+라/EC ⎵ "/SS ⎵ 고/JKQ ⎵ 당부하/VV+았/EP+다/EF ⎵ ./SF
 ```
 
 
-### 문장 번호 #23
+##### UTagger
+```text
+재판부/NNG+는/JX ⎵ "/SS+주변/NNG ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 내/VV+ㄴ/ETM ⎵ 탄원서/NNG ⎵ 내용/NNG+이/JKS ⎵ 진실/NNG+이/VCP+기/ETN+를/JKO ⎵ 바라/VV+고/EC ⎵ 피고인/NNG+이/JKS ⎵ 재판/NNG+과정/NNG+에서/JKB ⎵ 보이/VV+어/EC+주/VX+ㄴ/ETM ⎵ 여러/MM ⎵ 다짐/NNG+이/JKS ⎵ 진심/NNG+이/VCP+기/ETN+를/JKO ⎵ 기대하/VV+ㄴ다/EF+"/SS+며/EC ⎵ "/SS+생/NNG+을/JKO ⎵ 다하/VV+ㄹ/ETM ⎵ 때/NNG+까지/JX ⎵ 참회하/VV+는/ETM ⎵ 것/NNB+이/JKS ⎵ 맞/VV+다/EF+./SF ⎵ 피고인/NNG+에게/JKB ⎵ 하/VV+ㄹ/ETM ⎵ 한/MM+가지/NNB ⎵ 당부/NNG+는/JX ⎵ 여성/NNG+이/JKS ⎵ 있/VA+기에/EC ⎵ 사람/NNG+들/XSN+이/JKS ⎵ 존재하/VV+ㄹ/ETM ⎵ 수/NNB ⎵ 있/VA+다는/ETM ⎵ 것/NNB+이/VCP+다/EF+./SF ⎵ 잊/VV+지/EC ⎵ 말/VX+고/EC ⎵ 노력하/VV+여서/EC ⎵ 밝/VA+은/ETM ⎵ 삶/NNG+을/JKO ⎵ 준비하/VV+라/EF+"/SS+고/JKQ ⎵ 당부하/VV+였/EP+다/EF+./SF
+```
+
+
+### 문장 번호 #40
 
 원본 문장:
 
-> 주민들은 지난해 11월에도 리조트 입구와 서울 부영그룹 본사 앞 등지에서 17일간 집회를 열고 비슷한 목소리를 냈다. 당시 ㈜무주덕유산리조트 김시권 대표와 구천동 관광특구연합회 조병리 회장이 ‘지역과 기업이 상생의 기본정신을 바탕으로 준수할 것을 합의한다’는 협정서에 사인을 했다.
+> 검찰은 "모욕의 정도가 중하고 약자인 여성 외국인에 대한 폭력을 행사해 죄질이 불량하다"며 "이미 동종 전과가 수차례 있고 누범기간 중 발생했지만 범행을 일부 부인하고 반성의 기미를 전혀 보이고 있지 않다"고 구형 이유를 밝혔다.
 
 #### 품사 분석
 
 ##### ETRI API
 ```text
-주민/NNG+들/XSN+은/JX ⎵ 지난해/NNG ⎵ 11/SN+월/NNB+에/JKB+도/JX ⎵ 리조트/NNG ⎵ 입구/NNG+와/JC ⎵ 서울/NNP ⎵ 부영그룹/NNP ⎵ 본사/NNG ⎵ 앞/NNG ⎵ 등지/NNB+에서/JKB ⎵ 17/SN+일/NNB+간/XSN ⎵ 집회/NNG+를/JKO ⎵ 열/VV+고/EC ⎵ 비슷하/VA+ㄴ/ETM ⎵ 목소리/NNP+를/JKO ⎵ 내/VV+었/EP+다/EF+./SF
-당시/NNG ⎵ ㈜/SW+무주덕유산리조트/NNP ⎵ 김시권/NNP ⎵ 대표/NNG+와/JC ⎵ 구천동/NNP ⎵ 관광특구/NNG+연합회/NNG ⎵ 조병리/NNP ⎵ 회장/NNG+이/JKS ⎵ ‘/SS+지역/NNG+과/JC ⎵ 기업/NNG+이/JKS ⎵ 상생/NNG+의/JKG ⎵ 기본/NNG+정신/NNG+을/JKO ⎵ 바탕/NNG+으로/JKB ⎵ 준수하/VV+ㄹ/ETM ⎵ 것/NNB+을/JKO ⎵ 합의하/VV+ㄴ다/EF+’/SS+는/JX ⎵ 협정/NNG+서/XSN+에/JKB ⎵ 사인/NNG+을/JKO ⎵ 하/VV+었/EP+다/EF+./SF
+검찰/NNG+은/JX ⎵ "/SS+모욕/NNG+의/JKG ⎵ 정도/NNG+가/JKS ⎵ 중하/VA+고/EC ⎵ 약자/NNG+이/VCP+ㄴ/ETM ⎵ 여성/NNG ⎵ 외국인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 폭력/NNG+을/JKO ⎵ 행사하/VV+어/EC ⎵ 죄질/NNG+이/JKS ⎵ 불량하/VA+다/EF+"/SS+며/EC ⎵ "/SS+이미/MAG ⎵ 동종/NNG ⎵ 전과/NNG+가/JKS ⎵ 수차례/NNG ⎵ 있/VA+고/EC ⎵ 누범/NNG+기간/NNG ⎵ 중/NNB ⎵ 발생하/VV+었/EP+지만/EC ⎵ 범행/NNG+을/JKO ⎵ 일부/NNG ⎵ 부인하/VV+고/EC ⎵ 반성/NNG+의/JKG ⎵ 기미/NNG+를/JKO ⎵ 전혀/MAG ⎵ 보이/VV+고/EC ⎵ 있/VX+지/EC ⎵ 않/VX+다/EF+"/SS+고/JKQ ⎵ 구형/NNG ⎵ 이유/NNG+를/JKO ⎵ 밝히/VV+었/EP+다/EF+./SF
 ```
 
 
 ##### Kakao Khaiii
 ```text
-주민/NNG+들/XSN+은/JX ⎵ 지난해/NNG ⎵ 11/SN+월/NNB+에/JKB+도/JX ⎵ 리조트/NNG ⎵ 입구/NNG+와/JC ⎵ 서울/NNP ⎵ 부영그/NNP+룹/NNG ⎵ 본사/NNG ⎵ 앞/NNG ⎵ 등지/NNB+에서/JKB ⎵ 17/SN+일/NNB+간/XSN ⎵ 집회/NNG+를/JKO ⎵ 열/VV+고/EC ⎵ 비슷/XR+하/XSA+ㄴ/ETM ⎵ 목소리/NNG+를/JKO ⎵ 내/VV+었/EP+다/EF+./SF
-당시/NNG ⎵ ㈜/SW+무주덕유산리조/NNP+트/NNG ⎵ 김시권/NNP ⎵ 대표/NNG+와/JC ⎵ 구천동/NNP ⎵ 관광/NNG+특구/NNG+연합/NNG+회/NNP ⎵ 조병리/NNP ⎵ 회장/NNG+이/JKS ⎵ ‘/SS+지역/NNG+과/JC ⎵ 기업/NNG+이/JKS ⎵ 상생/NNG+의/JKG ⎵ 기본/NNG+정신/NNG+을/JKO ⎵ 바탕/NNG+으로/JKB ⎵ 준수/NNG+하/XSV+ㄹ/ETM ⎵ 것/NNB+을/JKO ⎵ 합의/NNG+하/XSV+ㄴ다/EC+’/SS+는/ETM ⎵ 협정서/NNG+에/JKB ⎵ 사인/NNG+을/JKO ⎵ 하/VV+였/EP+다/EF+./SF
+검찰/NNG+은/JX ⎵ "/SS+모욕/NNG+의/JKG ⎵ 정도/NNG+가/JKS ⎵ 중하/VA+고/EC ⎵ 약자/NNG+이/VCP+ㄴ/ETM ⎵ 여성/NNG ⎵ 외국인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 폭력/NNG+을/JKO ⎵ 행사/NNG+하/XSV+여/EC ⎵ 죄질/NNG+이/JKS ⎵ 불량/NNG+하/XSA+다/EF+"/SS+며/EC ⎵ "/SS+이미/MAG ⎵ 동종/NNG ⎵ 전과/NNG+가/JKS ⎵ 수차례/NNG ⎵ 있/VV+고/EC ⎵ 누범/NNG+기간/NNG ⎵ 중/NNB ⎵ 발생/NNG+하/XSV+였/EP+지만/EC ⎵ 범행/NNG+을/JKO ⎵ 일부/NNG ⎵ 부인/NNG+하/XSV+고/EC ⎵ 반성/NNG+의/JKG ⎵ 기미/NNG+를/JKO ⎵ 전혀/MAG ⎵ 보이/VV+고/EC ⎵ 있/VX+지/EC ⎵ 않/VX+다/EF+"/SS+고/JKQ ⎵ 구형/NNG ⎵ 이유/NNG+를/JKO ⎵ 밝히/VV+었/EP+다/EF+./SF
 ```
 
 
 ##### 은전한닢(Mecab-ko)
 ```text
-주민/NNG+들/XSN+은/JX ⎵ 지난/NNG+해/NNG ⎵ 11/SN ⎵ 월/NNM+에/JKB+도/JX ⎵ 리조트/NNG ⎵ 입구/NNG+와/JC ⎵ 서울/NNP ⎵ 부영/NNG ⎵ 그룹/NNG ⎵ 본사/NNG ⎵ 앞/NNG ⎵ 등지/NNB+에서/JKB ⎵ 17/SN ⎵ 일/NNM ⎵ 간/NNG ⎵ 집회/NNG+를/JKO ⎵ 열/VV+고/EC ⎵ 비슷/XR+하/XSA+ᆫ/ETM ⎵ 목/NNG+소리/NNG+를/JKO ⎵ 내/VV+았/EP+다/EF ⎵ ./SF
-당시/NNG ⎵ ㈜/SW ⎵ 무주덕유산리조트/NA ⎵ 김시권/NNP ⎵ 대표/NNG+와/JC ⎵ 구천/NNP+동/NNG ⎵ 관광/NNG+특구/NNG ⎵ 연합/NNG+회/NNG ⎵ 조/NNG ⎵ 병리/NNG ⎵ 회장/NNG+이/JKS ⎵ ‘/SW ⎵ 지역/NNG+과/JC ⎵ 기업/NNG+이/JKS ⎵ 상생/NNG+의/JKG ⎵ 기본/NNG ⎵ 정신/NNG+을/JKO ⎵ 바탕/NNG+으로/JKB ⎵ 준수/NNG+하/XSV+ᆯ/ETM ⎵ 것/NNB+을/JKO ⎵ 합의/NNG+하/XSV+ᆫ다/EC ⎵ ’/SW ⎵ 는/JX ⎵ 협정/NNG ⎵ 서/NNG+에/JKB ⎵ 사인/NNG+을/JKO ⎵ 하/VV+았/EP+다/EF ⎵ ./SF
+검찰/NNG+은/JX ⎵ "/SW ⎵ 모욕/NNG+의/JKG ⎵ 정도/NNG+가/JKS ⎵ 중하/VA+고/EC ⎵ 약자/NNG+이/VCP+ᆫ/ETM ⎵ 여성/NNG ⎵ 외국/NNG+인/NNG+에/JKB ⎵ 대하/VV+ᆫ/ETM ⎵ 폭력/NNG+을/JKO ⎵ 행사/NNG+하/XSV+아/EC ⎵ 죄질/NNG+이/JKS ⎵ 불량/NNG+하/XSV+다/EC ⎵ "/SW ⎵ 며/EC ⎵ "/SW ⎵ 이미/MAG ⎵ 동종/NNG ⎵ 전과/NNG+가/JKS ⎵ 수/NNG+차례/NNG ⎵ 있/VV+고/EC ⎵ 누범/NNG ⎵ 기간/NNG ⎵ 중/NNB ⎵ 발생/NNG+하/XSV+았/EP+지만/EC ⎵ 범행/NNG+을/JKO ⎵ 일부/NNG ⎵ 부인/NNG+하/XSV+고/EC ⎵ 반성/NNG+의/JKG ⎵ 기미/NNG+를/JKO ⎵ 전혀/MAG ⎵ 보이/VV+고/EC ⎵ 있/VX+지/EC ⎵ 않/VX+다/EC ⎵ "/SW ⎵ 고/JKQ ⎵ 구형/NNG ⎵ 이유/NNG+를/JKO ⎵ 밝히/VV+었/EP+다/EF ⎵ ./SF
 ```
 
 
 ##### 코모란
 ```text
-주민/NNG+들/XSN+은/JX ⎵ 지난해/NNG ⎵ 11월/NNP+에/JKB+도/JX ⎵ 리조트/NNP ⎵ 입구/NNG+와/JC ⎵ 서울/NNP ⎵ 부영/NNP+그룹/NNP ⎵ 본사/NNP ⎵ 앞/NNG ⎵ 등지/NNP+에서/JKB ⎵ 17/SN+일/NR+간/NNB ⎵ 집회/NNG+를/JKO ⎵ 열/VV+고/EC ⎵ 비슷/XR+하/XSA+ㄴ/ETM ⎵ 목소리/NNG+를/JKO ⎵ 내/VX+었/EP+다/EF+./SF
-당시/NNG ⎵ ㈜/SW+무주덕유산리조트/NNP ⎵ 김시권/NNP ⎵ 대표/NNG+와/JC ⎵ 구천/NNP+동/MM ⎵ 관광/NNG+특구/NNG+연합회/NNG ⎵ 조/NNP+병리/NNG ⎵ 회장/NNG+이/JKS ⎵ ‘/SS+지역/NNG+과/JC ⎵ 기업/NNG+이/JKS ⎵ 상생/NNG+의/JKG ⎵ 기본/NNG+정신/NNG+을/JKO ⎵ 바탕/NNG+으로/JKB ⎵ 준수/NNG+하/XSV+ㄹ/ETM ⎵ 것/NNB+을/JKO ⎵ 합의/NNG+하/XSV+ㄴ다/EC+’/SS+는/JX ⎵ 협정/NNG+서/NNP+에/JKB ⎵ 사인/NNG+을/JKO ⎵ 하/VV+았/EP+다/EF+./SF
+검찰/NNG+은/JX ⎵ "/SS+모욕/NNP+의/JKG ⎵ 정도/NNG+가/JKS ⎵ 중/NNB+하/XSA+고/EC ⎵ 약자/NNP+이/VCP+ㄴ/ETM ⎵ 여성/NNG ⎵ 외국인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 폭력/NNG+을/JKO ⎵ 행사/NNG+하/XSV+아/EC ⎵ 죄질/NNG+이/JKS ⎵ 불량/NNG+하/XSV+다/EC+"/SS+이/VCP+며/EC ⎵ "/SS+이미/MAG ⎵ 동종/NNG ⎵ 전과/NNP+가/JKS ⎵ 수차례/NNG ⎵ 있/VV+고/EC ⎵ 누범/NNP+기간/NNP ⎵ 중/NNB ⎵ 발생/NNG+하/XSV+았/EP+지만/EC ⎵ 범행/NNG+을/JKO ⎵ 일부/NNG ⎵ 부인/NNG+하/XSV+고/EC ⎵ 반성/NNG+의/JKG ⎵ 기미/NNG+를/JKO ⎵ 전혀/MAG ⎵ 보이/VV+고/EC ⎵ 있/VV+지/EC ⎵ 않/VX+다/EC+"/SS+고/JKQ ⎵ 구형/NNG ⎵ 이유/NNG+를/JKO ⎵ 밝히/VV+었/EP+다/EF+./SF
 ```
 
 
 ##### 꼬꼬마
 ```text
-주민/NNG+들/XSN+은/JX ⎵ 지난해/NNG ⎵ 11/NR+월/NNM+에/JKB+도/JX ⎵ 리조트/NNG ⎵ 입구/NNG+와/JKB ⎵ 서울/NNG ⎵ 부영/NNG+그룹/NNG ⎵ 본사/NNG ⎵ 앞/NNG ⎵ 등지/NNB+에서/JKB ⎵ 17/NR+일/NNM ⎵ 간/NNG ⎵ 집회/NNG+를/JKO ⎵ 열/VV+고/EC ⎵ 비슷/XR+하/XSA+ㄴ/ETM ⎵ 목소리/NNG+를/JKO ⎵ 내/VV+었/EP+다/EF+./SF
-당시/NF ⎵ ㈜/SW ⎵ 무주/NNG ⎵ 덕유산/NNP ⎵ 리조트/NNG ⎵ 기/VV+ㅁ/ETN ⎵ 시권/NNG ⎵ 대표/NNG+와/JKB ⎵ 구천동/NNP ⎵ 관광/NNG ⎵ 특/NF+구/XSN ⎵ 연합회/NNG ⎵ 조병/NNG+리/XSN ⎵ 회장/NNG+이/JKS ⎵ ‘/SS ⎵ 지역/NNG+과/JC ⎵ 기업/NNG+이/JKS ⎵ 상생/NNG+의/JKG ⎵ 기본/NNG+정신/NNG+을/JKO ⎵ 바탕/NNG+으로/JKB ⎵ 준수/NNG+하/XSV+ㄹ/ETM ⎵ 것/NNB+을/JKO ⎵ 합의/NNG+하/XSV+ㄴ다/EC+’/SS ⎵ 늘/VA+ㄴ/ETM ⎵ 협정/NNG ⎵ 서/NNG+에/JKB ⎵ 사인/NNG+을/JKO ⎵ 하/VV+었/EP+다/EF+./SF
+검찰/NNG+은/JX ⎵ "/SS ⎵ 모욕/NNG+의/JKG ⎵ 정도/NNG+가/JKS ⎵ 중하/VA+고/EC ⎵ 약자/NNG+이/VCP+ㄴ/ETM ⎵ 여성/NNG ⎵ 외국/NNG+인/XSN+에/JKB ⎵ 대/NNG+하/XSV+ㄴ/ETM ⎵ 폭력/NNG+을/JKO ⎵ 행사/NNG+하/XSV+어/EC ⎵ 죄질/NNG+이/JKS ⎵ 불량/NNG+하/XSV+다/EC ⎵ "/SS+며/JC ⎵ "/SS ⎵ 이미/MAG ⎵ 동종/NNG ⎵ 전과/NNG+가/JKS ⎵ 수/NNG ⎵ 차례/NNG ⎵ 있/VV+고/EC ⎵ 누범/NNG+기간/NNG ⎵ 중/NNB ⎵ 발생/NNG+하/XSV+었/EP+지만/EC ⎵ 범행/NNG+을/JKO ⎵ 일부/NNG ⎵ 부인/NNG+하/XSV+고/EC ⎵ 반성/NNG+의/JKG ⎵ 기미/NNG+를/JKO ⎵ 전혀/MAG ⎵ 보이/VV+고/EC ⎵ 있/VX+지/EC ⎵ 않/VX+다/EC ⎵ "/SS+고/JC ⎵ 구형/NNG ⎵ 이유/NNG+를/JKO ⎵ 밝히/VV+었/EP+다/EF+./SF
 ```
 
 
 ##### 아리랑 (루씬)
 ```text
-주/NNG ⎵ 민/NNG ⎵ 들/VV+은/EF ⎵ 지난해/NNG ⎵ 1/NNG ⎵ 1/NNG ⎵ 월/NNG+에도/JX ⎵ 리조트/NNG ⎵ 입구/NNG+와/JX ⎵ 서울/NNG ⎵ 부영/NNG ⎵ 그룹/NNG ⎵ 본사/NNG ⎵ 앞 등/NNG ⎵ 지/NNG+에서/JX ⎵ 17일간/NNG ⎵ 집회/NNG+를/JX ⎵ 열/VV+고/EF ⎵ 비슷한/NNG ⎵ 목소리/NNG+를/JX ⎵ 내/VV+었/EP+다/EF ⎵ ./SF
-당시/NNG ⎵ ㈜무주/NNG ⎵ 덕/NNG ⎵ 유산리조트/NNG ⎵ 김시권/NNG ⎵ 대표/NNG+와/JX ⎵ 구/NNG ⎵ 천동/NNG ⎵ 관광/NNG ⎵ 특구연합회/NNG ⎵ 조/NNG ⎵ 병리/NNG ⎵ 회장/NNG+이/JX ⎵ ‘/SS ⎵ 지역/NNG+과/JX ⎵ 기업/NNG+이/JX ⎵ 상생/NNG+의/JX ⎵ 기본/NNG ⎵ 정신/NNG+을/JX ⎵ 바탕/NNG+으로/JX ⎵ 준수/NNG+하/XSV+ㄹ/EF ⎵ 것/NNG+을/JX ⎵ 합의/NNG+하/XSV+ㄴ다/EF ⎵ ’/SS ⎵ 는/NNG ⎵ 협정/NNG ⎵ 서/NNG+에/JX ⎵ 사인/NNG+을/JX ⎵ 하/VV+었/EP+다/EF ⎵ ./NA
+검/NNG ⎵ 찰/NNG+은/JX ⎵ "/SS ⎵ 모욕/NNG+의/JX ⎵ 정도/NNG+가/JX ⎵ 중하/VV+고/EF ⎵ 약자/NNG+이/XSV+ㄴ/EF ⎵ 여성/NNG ⎵ 외국/NNG ⎵ 인/NNG+에/JX ⎵ 대한/NNG ⎵ 폭력/NNG+을/JX ⎵ 행사/NNG+하/XSV+어/EF ⎵ 죄질/NNG+이/JX ⎵ 불량/NNG+하/XSV+어다/EF ⎵ "/SS ⎵ 며/JX ⎵ "/SS ⎵ 이미/NNG ⎵ 동종/NNG ⎵ 전과/NNG+가/JX ⎵ 수/NNG ⎵ 차례/NNG ⎵ 있/VV+고/EF ⎵ 누범/NNG ⎵ 기간/NNG ⎵ 중/NNG ⎵ 발생/NNG ⎵ 하/VV+었/EP+지만/EF ⎵ 범행/NNG+을/JX ⎵ 일부/NNG ⎵ 부인/NNG+하/XSV+고/EF ⎵ 반성/NNG+의/JX ⎵ 기미/NNG+를/JX ⎵ 전혀/NNG ⎵ 보이/VV+고/EF ⎵ 있/VV+지/EF ⎵ 않/VV+다/EF ⎵ "/SS ⎵ 고/NNG ⎵ 구형/NNG ⎵ 이유/NNG+를/JX ⎵ 밝히/VV+었/EP+다/EF ⎵ ./NA
 ```
 
 
 ##### 한나눔
 ```text
-주민/NNG+들/NNG+은/JX ⎵ 지난해/NNG ⎵ 11/NR+월/NNM+에/JKB+도/JX ⎵ 리조트/NNG ⎵ 입구/NNG+와/JC ⎵ 서울/NNG ⎵ 부영/NNG+그룹/NNG ⎵ 본사/NNG ⎵ 앞/NNG ⎵ 등지/NNB+에서/JKB ⎵ 17/NR+이/VCP+ㄹ/ETM+간/NNB ⎵ 집회/NNG+를/JKO ⎵ 열/VV+고/EC ⎵ 비슷/NNG+하/XSA+ㄴ/ETM ⎵ 목소리/NNG+를/JKO ⎵ 내/VX+었/EP+다/EF ⎵ ./SF
-당시/NNG ⎵ ㈜무주덕유산리조트/NNG ⎵ 김시권/NNG ⎵ 대표/NNG+와/JC ⎵ 구/NR+천/NR+동/NNM ⎵ 관광/NNG+특구/NNG+연합회/NNG ⎵ 조병/NNG+리/NNG ⎵ 회장/NNG+이/JKC ⎵ ‘지역/NNG+과/JC ⎵ 기업/NNG+이/JKC ⎵ 상생/NNG+의/JKG ⎵ 기본정신/NNG+을/JKO ⎵ 바탕/NNG+으로/JKB ⎵ 준수/NNG+하/XSV+ㄹ/ETM ⎵ 것/NNB+을/JKO ⎵ 합의한다’/NNG+는/JX ⎵ 협정/NNG+서/NNG+에/JKB ⎵ 사인/NNG+을/JKO ⎵ 하/VX+었/EP+다/EF ⎵ ./SF
+검찰/NNG+은/JX ⎵ "/SS+모욕/NNG+의/JKG ⎵ 정도/NNG+가/JKS ⎵ 중/NNB+하고/JC ⎵ 약자/NNG+이/VCP+ㄴ/ETM ⎵ 여성/NNG ⎵ 외국인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 폭력/NNG+을/JKO ⎵ 행사/NNG+하/XSV+어/EC ⎵ 죄질/NNG+이/JKC ⎵ 불량하다"며/NNG ⎵ "/SS+이미/MAG ⎵ 동종/NNG ⎵ 전과/NNG+가/JKS ⎵ 수차례/NNG ⎵ 있/VX+고/EC ⎵ 누범기간/NNG ⎵ 중/NNB ⎵ 발생/NNG+하/XSV+었/EP+지만/EC ⎵ 범행/NNG+을/JKO ⎵ 일/NR+부/NNM ⎵ 부인/NNG+하고/JC ⎵ 반성/NNG+의/JKG ⎵ 기미/NNG+를/JKO ⎵ 전혀/MAG ⎵ 보이/VV+고/EC ⎵ 있/VX+지/EC ⎵ 않/VX+다/EF+"/SS+고/JKQ ⎵ 구형/NNG ⎵ 이유/NNG+를/JKO ⎵ 밝히/VV+었/EP+다/EF ⎵ ./SF
 ```
 
 
 ##### Open Korean Text
 ```text
-주민/NNG+들/XSO+은/JX ⎵ 지난해/NNG ⎵ 11월/NR+에도/SL ⎵ 리조트/NNG ⎵ 입구/NNG+와/JX ⎵ 서울/NNG ⎵ 부영/NNG+그룹/NNG ⎵ 본사/NNG ⎵ 앞/NNG ⎵ 등지/NNG+에서/JX ⎵ 17일/NR+간/SL ⎵ 집회/NNG+를/JX ⎵ 열고/VV ⎵ 비슷한/VA ⎵ 목소리/NNG+를/JX ⎵ 냈다/VV+./SF
-당시/NNG ⎵ ㈜/SL+무주덕유산리조트/NNG ⎵ 김시권/NNG ⎵ 대표/NNG+와/JX ⎵ 구천동/NNG ⎵ 관광/NNG+특/NNG+구/MM+연합/NNG+회/NNG ⎵ 조병/NNG+리/NNG ⎵ 회장/NNG+이/JX ⎵ ‘/SL+지역/NNG+과/JX ⎵ 기업/NNG+이/JX ⎵ 상생/NNG+의/JX ⎵ 기/MM+본정신/NNG+을/JX ⎵ 바탕/NNG+으로/JX ⎵ 준수/NNG+할/VV ⎵ 것/NNG+을/JX ⎵ 합의/NNG+한다/VV+’/SF+는/VV ⎵ 협정/NNG+서에/VV ⎵ 사인/NNG+을/JX ⎵ 했다/VV+./SF
+검찰/NNG+은/JX ⎵ "/SF+모욕/NNG+의/JX ⎵ 정도/NNG+가/JX ⎵ 중하/NNG+고/JX ⎵ 약자/NNG+인/JX ⎵ 여성/NNG ⎵ 외국인/NNG+에/JX ⎵ 대한/NNG ⎵ 폭력/NNG+을/JX ⎵ 행사/NNG+해/VV ⎵ 죄질/NNG+이/JX ⎵ 불량하다/VA+"/SF+며/NNG ⎵ "/SF+이미/MAG ⎵ 동종/NNG ⎵ 전과/NNG+가/JX ⎵ 수/MM+차례/NNG ⎵ 있고/VA ⎵ 누범/NNG+기간/NNG ⎵ 중/NNG ⎵ 발생/NNG+했지만/VV ⎵ 범행/NNG+을/JX ⎵ 일부/NNG ⎵ 부인/NNG+하고/JX ⎵ 반성/NNG+의/JX ⎵ 기미/NNG+를/JX ⎵ 전혀/NNG ⎵ 보이/NNG+고/JX ⎵ 있지/VA ⎵ 않다/VV+"/SF+고/NNG ⎵ 구형/NNG ⎵ 이유/NNG+를/JX ⎵ 밝혔다/VV+./SF
 ```
 
 
 ##### Daon
 ```text
-주민/NNG+들/XSN+은/JX ⎵ 지난해/NNG ⎵ 11/SN+월/NNB+에/JKB+도/JX ⎵ 리조트/NNG ⎵ 입구/NNG+와/JC ⎵ 서울/NNP ⎵ 부영/NNP+그룹/NNG ⎵ 본사/NNG ⎵ 앞/NNG ⎵ 등지/NNB+에서/JKB ⎵ 17/SN+일/NNB+간/NNG ⎵ 집회/NNG+를/JKO ⎵ 열/VV+고/EC ⎵ 비슷하/VA+ㄴ/ETM ⎵ 목소리/NNG+를/JKO ⎵ 내/VV+었/EP+다/EF+./SF
-당시/NNG ⎵ ㈜/SP+무주/NNP+덕유산/NNP+리조트/NNG ⎵ 김시권/NNG ⎵ 대표/NNG+와/JC ⎵ 구천/NNG+동/NNB ⎵ 관광특구/NNG+연합회/NNG ⎵ 조/NNB+병리/NNG ⎵ 회장/NNG+이/JKS ⎵ ‘/SW+지역/NNG+과/JC ⎵ 기업/NNG+이/JKS ⎵ 상생/NNG+의/JKG ⎵ 기본정신/NNG+을/JKO ⎵ 바탕/NNG+으로/JKB ⎵ 준수/NNG+하/XSV+ㄹ/ETM ⎵ 것/NNB+을/JKO ⎵ 합의/NNG+하/XSV+ㄴ다/EF+’/SW+는/JX ⎵ 협정서/NNG+에/JKB ⎵ 사인/NNG+을/JKO ⎵ 하/VV+었/EP+다/EF+./SF
+검찰/NNG+은/JX ⎵ "/SP+모욕/NNG+의/JKG ⎵ 정도/NNG+가/JKS ⎵ 중/NNG+하/XSV+고/EC ⎵ 약자/NNG+이/VCP+ㄴ/ETM ⎵ 여성/NNG ⎵ 외국인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 폭력/NNG+을/JKO ⎵ 행사/NNG+하/XSV+어/EC ⎵ 죄질/NNG+이/JKS ⎵ 불량/NNG+하/XSA+다/EF+"/SP+며/EC ⎵ "/SP+이미/MAG ⎵ 동종/NNG ⎵ 전과/NNG+가/JKS ⎵ 수차례/NNG ⎵ 있/VA+고/EC ⎵ 누범/NNG+기간/NNG ⎵ 중/NNB ⎵ 발생/NNG+하/XSV+었/EP+지만/EC ⎵ 범행/NNG+을/JKO ⎵ 일부/NNG ⎵ 부인/NNG+하/XSV+고/EC ⎵ 반성/NNG+의/JKG ⎵ 기미/NNG+를/JKO ⎵ 전혀/MAG ⎵ 보이/VV+고/EC ⎵ 있/VX+지/EC ⎵ 않/VX+다/EF+"/SP+고/EC ⎵ 구형/NNG ⎵ 이유/NNG+를/JKO ⎵ 밝히/VV+었/EP+다/EF+./SF
 ```
 
 
 ##### 라이노
 ```text
-주민/NNG+들/XSN+은/JX ⎵ 지난해/NNG ⎵ 11/SN+월/NNB+에/JKB+도/JX ⎵ 리조트/NNG ⎵ 입구/NNG+와/JC ⎵ 서울/NNP ⎵ 부영/NNP+그룹/NNG ⎵ 본사/NNG ⎵ 앞/NNG ⎵ 등지/NNB+에서/JKB ⎵ 17/SN+일/NNB+간/NNB ⎵ 집회/NNG+를/JKO ⎵ 열/VV+고/EC ⎵ 비슷/XR+하/VV+ㄴ/ETM ⎵ 목소리/NNG+를/JKO ⎵ 내/VV+었/EP+다/EF ⎵ ./SF
-당시/NNG ⎵ 김시권/NNP ⎵ 대표/NNG+와/JC ⎵ 구천동/NNP ⎵ 관광/NNG+특구/NNG+연합회/NNG ⎵ 조/NR+병리/NNG ⎵ 회장/NNG+이/JKS ⎵ ‘/SS ⎵ 지역/NNG+과/JC ⎵ 기업/NNG+이/JKS ⎵ 상생/NNG+의/JKG ⎵ 기본/NNG+정신/NNG+을/JKO ⎵ 바탕/NNG+으로/JKB ⎵ 준수하/VV+ㄹ/ETM ⎵ 것/NNB+을/JKO ⎵ 합의하/VV+ㄴ다/EF ⎵ ’/SS ⎵ 는/JX ⎵ 협정서/NNG+에/JKB ⎵ 사인/NNG+을/JKO ⎵ 하/XSV+았/EP+다/EF ⎵ ./SF
+검찰/NNG+은/JX ⎵ "/SS ⎵ 모욕/NNG+의/JKG ⎵ 정도/NNG+가/JKS ⎵ 중하/VA+고/EC ⎵ 약자/NNG+이/VCP+ㄴ/ETM ⎵ 여성/NNG ⎵ 외국인/NNG+에/JKB ⎵ 대/NNB+하/VV+ㄴ/ETM ⎵ 폭력/NNG+을/JKO ⎵ 행사하/VV+아/EC ⎵ 죄질/NNG+이/JKS ⎵ 불량하/VV+다/EF ⎵ "/SS ⎵ 며/EC ⎵ "/SS ⎵ 이미/MAG ⎵ 동종/NNG ⎵ 전과/NNG+가/JKS ⎵ 수차례/NNG ⎵ 있/VX+고/EC ⎵ 누범/NNG+기간/NNG ⎵ 중/NNB ⎵ 발생하/VV+았/EP+지만/EC ⎵ 범행/NNG+을/JKO ⎵ 일부/NNG ⎵ 부인하/VV+고/EC ⎵ 반성/NNG+의/JKG ⎵ 기미/NNG+를/JKO ⎵ 전혀/MAG ⎵ 보이/VV+고/EC ⎵ 있/VX+지/EC ⎵ 않/VX+다/EF ⎵ "/SS ⎵ 고/JKQ ⎵ 구형/NNG ⎵ 이유/NNG+를/JKO ⎵ 밝히/VV+었/EP+다/EF ⎵ ./SF
+```
+
+
+##### UTagger
+```text
+검찰/NNG+은/JX ⎵ "/SS+모욕/NNG+의/JKG ⎵ 정도/NNG+가/JKS ⎵ 중하/VA+고/EC ⎵ 약자/NNG+이/VCP+ㄴ/ETM ⎵ 여성/NNG ⎵ 외국인/NNG+에/JKB ⎵ 대하/VV+ㄴ/ETM ⎵ 폭력/NNG+을/JKO ⎵ 행사하/VV+여/EC ⎵ 죄질/NNG+이/JKS ⎵ 불량하/VA+다/EF+"/SS+며/EC ⎵ "/SS+이미/MAG ⎵ 동종/NNG ⎵ 전과/NNG+가/JKS ⎵ 수차례/NNG ⎵ 있/VA+고/EC ⎵ 누범/NNG+기간/NNG ⎵ 중/NNB ⎵ 발생하/VV+였/EP+지만/EC ⎵ 범행/NNG+을/JKO ⎵ 일부/NNG ⎵ 부인하/VV+고/EC ⎵ 반성/NNG+의/JKG ⎵ 기미/NNG+를/JKO ⎵ 전혀/MAG ⎵ 보이/VV+고/EC ⎵ 있/VX+지/EC ⎵ 않/VX+다/EF+"/SS+고/JKQ ⎵ 구형/NNG ⎵ 이유/NNG+를/JKO ⎵ 밝히/VV+었/EP+다/EF+./SF
 ```
 

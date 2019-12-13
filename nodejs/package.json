@@ -1,7 +1,8 @@
 {
   "name": "koalanlp-node-sample",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "dependencies": {
-    "koalanlp": "2.0.0"
+    "java": "^0.12.0",
+    "koalanlp": "^2.1.0"
   }
 }

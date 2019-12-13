@@ -1,7 +1,5 @@
 package sample;
 
-import static jdk.nashorn.internal.objects.Global.print;
-
 import kr.bydelta.koala.data.DepEdge;
 import kr.bydelta.koala.data.Sentence;
 import kr.bydelta.koala.data.Word;

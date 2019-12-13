@@ -1,4 +1,4 @@
-from koalanlp.Util import initialize
+from koalanlp.Util import initialize, finalize
 from koalanlp.proc import Parser
 from koalanlp import API
 
@@ -28,3 +28,5 @@ while True:
                                              str(edge.getDepType())))
         else:
             print("(Unexpected) NULL!")
+
+finalize()

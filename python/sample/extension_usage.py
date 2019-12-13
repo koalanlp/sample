@@ -1,4 +1,4 @@
-from koalanlp.Util import initialize
+from koalanlp.Util import initialize, finalize
 from koalanlp import ExtUtil
 
 initialize(CORE="LATEST")
@@ -71,3 +71,5 @@ print("ExtUtil.hanjaToHangul(\"國篇\") = %s" % (ExtUtil.hanjaToHangul("國篇"
 print("ExtUtil.hanjaToHangul(\"國篇은 오늘\") = %s" % (ExtUtil.hanjaToHangul("國篇은 오늘")))  #: "국편은 오늘"
 print("ExtUtil.hanjaToHangul(\"300 兩의 돈\") = %s" % (ExtUtil.hanjaToHangul("300 兩의 돈")))  #: "300 냥의 돈"
 print("ExtUtil.hanjaToHangul(\"樂園\") = %s" % (ExtUtil.hanjaToHangul("樂園")))  #: "낙원" (두음법칙)
+
+finalize()

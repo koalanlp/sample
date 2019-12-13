@@ -39,7 +39,7 @@ TERM=dumb ./gradlew -DmainClass=sample.SentenceSplitUsageKt :kotlin:run
 TERM=dumb ./gradlew -DmainClass=sample.SentenceSplitJava :java:run
 ```
 
-### Scala 2.11, 2.12
+### Scala 2.11, 2.12, 2.13
 
 * 문장 분리 기능 사용 예시 [SentenceSplitScala](https://github.com/koalanlp/sample/blob/master/scala/src/main/scala/sample/SentenceSplitScala.scala)
 * 품사분석기 사용 예시 [TaggerScala](https://github.com/koalanlp/sample/blob/master/scala/src/main/scala/sample/TaggerScala.scala)

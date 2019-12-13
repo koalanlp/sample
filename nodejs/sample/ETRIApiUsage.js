@@ -23,7 +23,7 @@ async function processText(text){
 
         console.log("# Named Entities");
         sent.getEntities().forEach((entity) => {
-            console.log(`[${entity.surface}]는 ${entity.fineLabel} 유형의 개체명으로, 형태소 [${entity.joinToString()}]를 포함합니다.`);
+            console.log(`[${entity.surface}]는 ${entity.fineLabel} 유형의 개체명으로, 형태소 [${entity.map(it => it.surface).join()}]를 포함합니다.`);
         });
 
         console.log("# Dependency Parse");
@@ -56,6 +56,6 @@ if (typeof API_KEY === 'undefined'){
 
 initialize({packages: {ETRI: 'LATEST'}})
     .then(() => {
-        labeler = new RoleLabeler(ETRI, {apiKey: API_KEY});
+        labeler = new RoleLabeler(ETRI, {etriKey: API_KEY});
         readInput();
     }).catch((err) => console.error('Error occurred!', err));

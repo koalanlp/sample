@@ -1,11 +1,11 @@
 plugins {
-    id "com.github.node-gradle.node" version "1.3.0"
+    id "com.github.node-gradle.node" version "2.2.0"
 }
 
 node{
-    version = '10.13.0'
-    npmVersion = '6.4.1'
-    yarnVersion = '1.12.3'
+    version = '12.13.1'
+    npmVersion = '6.12.1'
+    yarnVersion = '1.21.0'
 
     download = false
 }

@@ -1,4 +1,4 @@
-from koalanlp.Util import initialize
+from koalanlp.Util import initialize, finalize
 from koalanlp.proc import Dictionary
 from koalanlp.types import POS
 from koalanlp import API
@@ -26,3 +26,5 @@ dict.importFrom(Dictionary(API.KKMA), False, lambda t: t.isNoun())
 print("# 사용자 사전 목록 (30개)")
 for word in list(dict.getItems())[:30]:
     print("%s (Tag=%s)" % (word[0], str(word[1])))
+
+finalize()

@@ -7,10 +7,11 @@ import java.util.GregorianCalendar
 import kr.bydelta.koala
 import kr.bydelta.koala.data.Sentence
 import kr.bydelta.koala.proc.CanTag
+import kr.bydelta.koala.utagger.UTagger
 import org.jsoup.Jsoup
 
 import scala.collection.JavaConverters._
-import scala.util.{Random, Success, Try}
+import scala.util.{Properties, Random, Success, Try}
 import koala.Implicits._
 
 /**
@@ -27,6 +28,9 @@ object ComparisonGenerator {
       .split("\n").toSeq
 
   def main(args: Array[String]): Unit = {
+    val homePath = System.getenv("HOME")
+    UTagger.setPath(s"$homePath/utagger/bin/utagger-ubuntu1804.so", s"$homePath/utagger/Hlxcfg.txt")
+
     // Fetch random article
     implicit val testset: Seq[String] = Random.shuffle(
       Try(Jsoup.parse(new URL("http://media.daum.net/politics/"), 10000)) match {
@@ -53,7 +57,7 @@ object ComparisonGenerator {
         case _ =>
           example
       }
-    ).take(30)
+    ).take(200)
 
     val (kkmaLoading, kkmaSeq) = results[koala.kkma.Tagger]
     val (eunjeonLoading, eunjeonSeq) = results[koala.eunjeon.Tagger]
@@ -65,10 +69,14 @@ object ComparisonGenerator {
     val (daonLoading, daonSeq) = results[koala.daon.Tagger]
     val (etriLoading, etriSeq) = results[koala.etri.Tagger]
     val (khaiiiLoading, khaiiiSeq) = results[koala.khaiii.Tagger]
+    val (utaggerLoading, utaggerSeq) = results[koala.utagger.Tagger]
 
-    val names = Seq("ETRI API", "Kakao Khaiii", "은전한닢(Mecab-ko)", "코모란", "꼬꼬마", "아리랑 (루씬)", "한나눔", "Open Korean Text", "Daon", "라이노")
-    val loadings = Seq(etriLoading, khaiiiLoading, eunjeonLoading, kmrLoading, kkmaLoading, arirangLoading, hnnLoading, twtLoading, daonLoading, rhinoLoading)
-    val resultSeq = Seq(etriSeq, khaiiiSeq, eunjeonSeq, kmrSeq, kkmaSeq, arirangSeq, hnnSeq, twtSeq, daonSeq, rhinoSeq)
+    val names = Seq("ETRI API", "Kakao Khaiii", "은전한닢(Mecab-ko)", 
+      "코모란", "꼬꼬마", "아리랑 (루씬)", "한나눔", "Open Korean Text", "Daon", "라이노", "UTagger")
+    val loadings = Seq(etriLoading, khaiiiLoading, eunjeonLoading, 
+      kmrLoading, kkmaLoading, arirangLoading, hnnLoading, twtLoading, daonLoading, rhinoLoading, utaggerLoading)
+    val resultSeq = Seq(etriSeq, khaiiiSeq, eunjeonSeq, 
+      kmrSeq, kkmaSeq, arirangSeq, hnnSeq, twtSeq, daonSeq, rhinoSeq, utaggerSeq)
 
     val meanErrProcessing = resultSeq.map{
       s => 
@@ -90,10 +98,12 @@ object ComparisonGenerator {
     }
 
     val procs = Runtime.getRuntime.availableProcessors()
+    val heapSize = Runtime.getRuntime.maxMemory() / 1073741824
+    val version = Properties.versionNumberString
 
     implicit val bw: BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("../comparison.md")))
-    text("실제 사용 성능을 보여드리기 위해서, 카카오 뉴스에서 임의로 뉴스를 선택하고 30개 문단을 표본추출하였습니다.")
-    text(s"실험환경: Ubuntu 16.04, **3GB** MaxHeap, **$procs**-core(s), Scala **2.12**")
+    text(s"실제 사용 성능을 보여드리기 위해서, 카카오 뉴스에서 임의로 뉴스를 선택하고 ${testset.size}개 문단을 표본추출하였습니다.")
+    text(s"실험환경: Ubuntu 18.04, **${heapSize}GB** MaxHeap, **$procs**-core(s), Scala **${version}**")
     text(s"실험일시: ${new GregorianCalendar().getTime}")
     heading("시간 성능 개관")
     table(
@@ -166,7 +176,7 @@ object ComparisonGenerator {
       (start, tagger, end)
     }else {
       val start = System.currentTimeMillis()
-      val tagger = m.runtimeClass.newInstance.asInstanceOf[T]
+      val tagger = m.runtimeClass.getDeclaredConstructor().newInstance().asInstanceOf[T]
       val end = System.currentTimeMillis()
       (start, tagger, end)
     }

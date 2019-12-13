@@ -1,4 +1,4 @@
-from koalanlp.Util import initialize
+from koalanlp.Util import initialize, finalize
 from koalanlp.proc import RoleLabeler
 from koalanlp import API
 import os
@@ -11,10 +11,10 @@ if API_KEY is None:
     exit(1)
 
 initialize(ETRI='LATEST')
-labeler = RoleLabeler(API.ETRI, apiKey=API_KEY)
-# recognizer = EntityRecognizer(apiKey=API_KEY)
-# parser = Parser(apiKey=API_KEY)
-# tagger = Tagger(apiKey=API_KEY)
+labeler = RoleLabeler(API.ETRI, etri_key=API_KEY)
+# recognizer = EntityRecognizer(etri_key=API_KEY)
+# parser = Parser(etri_key=API_KEY)
+# tagger = Tagger(etri_key=API_KEY)
 
 while True:
     text = input("분석할 문장을 입력하세요>> ").strip()
@@ -55,3 +55,5 @@ while True:
                 print("[%s]는 [%s]의 %s" % (edge.getArgument().getSurface(),
                                           edge.getPredicate().getSurface(),
                                           str(edge.getLabel())))
+
+finalize()
